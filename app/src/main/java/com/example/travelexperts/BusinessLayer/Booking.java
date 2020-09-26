@@ -3,11 +3,12 @@ package com.example.travelexperts.BusinessLayer;
 
 
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Booking {
+public class Booking implements Serializable {
 
     private int bookingId;
     private Date bookingDate;
@@ -89,6 +90,6 @@ public class Booking {
     @Override
     public String toString() {
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
-        return bookingNo + " - Date:" + df.format(bookingDate);
+        return "# "+ bookingNo + " - " + df.format(bookingDate);
     }
 }

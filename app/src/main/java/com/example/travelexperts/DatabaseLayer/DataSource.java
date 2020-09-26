@@ -14,6 +14,9 @@ import android.util.Log;
 import com.example.travelexperts.BusinessLayer.Agency;
 import com.example.travelexperts.BusinessLayer.Agent;
 import com.example.travelexperts.BusinessLayer.Booking;
+import com.example.travelexperts.BusinessLayer.BookingDetail;
+import com.example.travelexperts.BusinessLayer.Customer;
+import com.example.travelexperts.BusinessLayer.ProdPackage;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -138,4 +141,71 @@ public class DataSource {
         }
         return  bookings;
     }
+
+    //Get all supplier-Products of a BookingId
+
+    public ArrayList<BookingDetail> getBookingDetailByBookingId(int bookingId)
+    {
+        ArrayList<BookingDetail> bookingDetails = new ArrayList<>();
+
+        String sql = "SELECT * FROM BookingDetails WHERE BookingId=?";
+        String [] args = {bookingId+ ""};
+        Cursor cursor = db.rawQuery(sql, args);
+
+        //String [ ] columns = {"BookingDetailId","ItineraryNo","TripStart","TripEnd","Description", "Destination","BasePrice","AgencyCommission","BookingId","RegionId","ClassId","FeedId","ProductSupplierId"};
+        //Cursor cursor = db.query("BookingDetails",columns,null,null,null,null,null);
+
+        while (cursor.moveToNext())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date dateStart =new Date();
+            Date dateEnd =new Date();
+
+            try {
+                dateStart = dateFormat.parse(cursor.getString(2));
+                dateEnd = dateFormat.parse(cursor.getString(3));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            bookingDetails.add(new BookingDetail(cursor.getInt(0), cursor.getDouble(1),dateStart,dateEnd,cursor.getString(4),cursor.getString(5),cursor.getDouble(6),cursor.getDouble(7),cursor.getInt(8),cursor.getString(9),cursor.getString(10),cursor.getString(11),cursor.getInt(12)));
+        }
+        return  bookingDetails;
+
+    }
+
+    //Get Package by id
+    public ProdPackage getPackageById(int packageId)
+    {
+        String sql = "SELECT * FROM Packages WHERE PackageId=?";
+        String [] args = {packageId+ ""};
+        Cursor cursor = db.rawQuery(sql, args);
+        //position the cursor on the next/first row
+        cursor.moveToNext();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date pkgStartDate =new Date();
+        Date pkgEndDate =new Date();
+
+        try {
+            pkgStartDate = dateFormat.parse(cursor.getString(2));
+            pkgEndDate = dateFormat.parse(cursor.getString(3));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //create a product using this row
+        return  new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
+    }
+
+    //Get Customer by id
+    public Customer getCustomerById (int customerId)
+    {
+        String sql = "SELECT * FROM Customers WHERE CustomerId=?";
+        String [] args = {customerId+ ""};
+        Cursor cursor = db.rawQuery(sql, args);
+        //position the cursor on the next/first row
+        cursor.moveToNext();
+        //create a product using this row
+        return  new Customer(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),cursor.getString(10),cursor.getInt(11));
+    }
+
 }

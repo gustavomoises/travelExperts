@@ -11,63 +11,76 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.travelexperts.BusinessLayer.Booking;
+import com.example.travelexperts.BusinessLayer.BookingDetail;
+import com.example.travelexperts.BusinessLayer.Customer;
+import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import java.util.ArrayList;
 
-public class BookingActivity extends AppCompatActivity {
+public class BookingDetailsActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clBooking;
-    DataSource dataSource;
+    ConstraintLayout clBookingDetails;
     Booking booking;
-    ArrayList<Booking>  bookings;
-    ListView lvBookingList;
-    ArrayAdapter<Booking> adapterBooking;
+    ArrayList<BookingDetail> bookingDetails;
+    Customer customer;
+    ProdPackage prodPackage;
+    DataSource dataSource;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_booking);
+        setContentView(R.layout.activity_booking_details);
+
+        dataSource= new DataSource(this);
+        Intent intent = getIntent();
+        booking =(Booking) intent.getSerializableExtra("Booking");
+
+        ArrayList<Double> costProducts = new ArrayList<>();
+        Double bookProd=0.0;
+        Double agencyCommission=0.0;
+        customer=dataSource.getCustomerById(booking.getCustomerId());
+        bookingDetails= dataSource.getBookingDetailByBookingId(booking.getBookingId());
+        for (BookingDetail bk :bookingDetails )
+        {
+            costProducts.add(booking.getTravelerCount()*bk.getBasePrice());
+            bookProd+= booking.getTravelerCount()*bk.getBasePrice();
+            agencyCommission += booking.getTravelerCount()*bk.getAgencyCommission();
+
+        }
+        if (booking.getPackageId()!=0){
+            prodPackage=dataSource.getPackageById(booking.getPackageId());
+            Double pkgCost = booking.getTravelerCount()*prodPackage.getPkgBasePrice();
+            agencyCommission +=booking.getTravelerCount()*prodPackage.getPkgAgencyCommission();
+        }
+
+        Double bookTotal = bookProd + agencyCommission;
         //Set background color form Settings
-        clBooking= findViewById(R.id.clBooking);
-        lvBookingList=findViewById(R.id.lvBookingList);
-        dataSource = new DataSource(this);
-
-        lvBookingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                booking = bookings.get(position);
-                Intent intent = new Intent(getApplicationContext(), BookingDetailsActivity.class);
-                intent.putExtra("Booking",booking);
-                startActivity(intent);
-            }
-        });
-
+        clBookingDetails= findViewById(R.id.clBookingDetails);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+
+
         switch (basicColor){
             case "White":
-                clBooking.setBackgroundColor(Color.WHITE);
+                clBookingDetails.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clBooking.setBackgroundColor(Color.BLUE);
+                clBookingDetails.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clBooking.setBackgroundColor(Color.GREEN);
+                clBookingDetails.setBackgroundColor(Color.GREEN);
                 break;
 
         }
-        loadData();
     }
-
 
     //Load Application Menu
     @Override
@@ -121,26 +134,20 @@ public class BookingActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clBooking= findViewById(R.id.clBooking);
+        clBookingDetails= findViewById(R.id.clBookingDetails);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clBooking.setBackgroundColor(Color.WHITE);
+                clBookingDetails.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clBooking.setBackgroundColor(Color.BLUE);
+                clBookingDetails.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clBooking.setBackgroundColor(Color.GREEN);
+                clBookingDetails.setBackgroundColor(Color.GREEN);
                 break;
         }
-    }
-    //Get all the agents in the database and associate to the Listview
-    private void loadData() {
-        bookings=dataSource.getBookings();
-        adapterBooking=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,dataSource.getBookings());
-        lvBookingList.setAdapter(adapterBooking);
     }
 }
