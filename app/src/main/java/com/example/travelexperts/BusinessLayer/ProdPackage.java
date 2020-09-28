@@ -82,9 +82,6 @@ public class ProdPackage {
 
     @Override
     public String toString() {
-        return  packageId + ") " + pkgName + " - "+pkgDec+"\n"+
-                "Start=" + pkgStartDate +"\n"+
-                "End=" + pkgEndDate;
-
+        return  pkgName + "  "+pkgDec;
     }
 }

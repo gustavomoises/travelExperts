@@ -130,6 +130,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return custFirstName + " " + custLastName + " - " +custEmail;
+        return custFirstName + " " + custLastName;
     }
 }

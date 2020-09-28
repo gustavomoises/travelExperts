@@ -142,8 +142,6 @@ public class BookingDetail {
 
     @Override
     public String toString() {
-        return productSupplierId+") "+destination+" - " + description+"\n"+
-                "Start=" + tripStart +"\n"+
-                "End=" + tripEnd;
+        return description+" - "+destination;
     }
 }
