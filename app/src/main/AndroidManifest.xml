@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationLayer.AddBookingDetailActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddBookDetailsActivity"></activity>
         <activity android:name=".ApplicationLayer.AddBookingActivity" />
         <activity android:name=".ApplicationLayer.BookingDetailsActivity" />
         <activity android:name=".ApplicationLayer.RegionActivity" />

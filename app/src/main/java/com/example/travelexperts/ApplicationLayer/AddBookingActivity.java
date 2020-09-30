@@ -25,7 +25,6 @@ import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
-import com.example.travelexperts.BusinessLayer.ProductSupplier;
 import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
@@ -39,6 +38,7 @@ public class AddBookingActivity extends AppCompatActivity {
     ConstraintLayout clAddBooking;
     String mode;
     Booking booking;
+    BookingDetail bookingDetail;
     Boolean NewBooking,FirstTimeTrip, FirstTimePkg, FirstTimeCustomer;
     Button btnSaveBooking, btnCancelBooking,btnAddBookingDetail;
     EditText etTravelerCount;
@@ -305,6 +305,28 @@ public class AddBookingActivity extends AppCompatActivity {
                 break;
 
         }
+
+        btnAddBookingDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent4 = new Intent(getApplicationContext(), AddBookDetailsActivity.class);
+                intent4.putExtra("mode","insert");
+                intent4.putExtra("Booking",booking);
+                startActivity(intent4);
+            }
+        });
+
+        lvBookingProducts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                bookingDetail = bookingDetails.get(position);
+                Intent intent5 = new Intent(getApplicationContext(), AddBookDetailsActivity.class);
+                intent5.putExtra("mode","update");
+                intent5.putExtra("Booking",booking);
+                intent5.putExtra("BookingDetail",bookingDetail);
+                startActivity(intent5);
+            }
+        });
         loadBookingDetails();
     }
 

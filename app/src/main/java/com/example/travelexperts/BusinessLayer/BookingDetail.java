@@ -1,8 +1,9 @@
 package com.example.travelexperts.BusinessLayer;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BookingDetail {
+public class BookingDetail implements Serializable {
     private int bookingDetailId;
     private double itineraryNo;
     private Date tripStart;

@@ -13,11 +13,16 @@ import android.util.Log;
 
 import com.example.travelexperts.BusinessLayer.Agency;
 import com.example.travelexperts.BusinessLayer.Agent;
+import com.example.travelexperts.BusinessLayer.BookClass;
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
+import com.example.travelexperts.BusinessLayer.Fee;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
+import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.ProductSupplier;
+import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.BusinessLayer.Supplier;
 import com.example.travelexperts.BusinessLayer.TripType;
 
 import java.util.Calendar;
@@ -27,6 +32,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
+
+import static java.lang.Math.ceil;
 
 
 public class DataSource {
@@ -169,22 +176,20 @@ public class DataSource {
         while (cursor.moveToNext())
         {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date dateStart =new Date();
-            Date dateEnd =new Date();
+            Date dateStart;
+            Date dateEnd;
 
             try {
-                if(cursor.getString(2)==null)
                      dateStart = dateFormat.parse(cursor.getString(2));
-                else
-                    dateStart = dateFormat.parse("1900-01-01 00:00:00");
+            } catch (Exception e) {
+                dateStart=null;
+            }
+            try
+            {
+                dateEnd = dateFormat.parse(cursor.getString(3));
 
-                if(cursor.getString(3)==null)
-                    dateEnd = dateFormat.parse(cursor.getString(3));
-                    else
-                        dateEnd = dateFormat.parse("1900-01-01 00:00:00");
-
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                dateEnd=null;
             }
             bookingDetails.add(new BookingDetail(cursor.getInt(0), cursor.getDouble(1),dateStart,dateEnd,cursor.getString(4),cursor.getString(5),cursor.getDouble(6),cursor.getDouble(7),cursor.getInt(8),cursor.getString(9),cursor.getString(10),cursor.getString(11),cursor.getInt(12)));
         }
@@ -372,6 +377,169 @@ public class DataSource {
         cursor.moveToNext();
         return cursor.getInt(0);
 
+    }
+
+    public ArrayList<Fee> getFees()
+    {
+        ArrayList<Fee> fees = new ArrayList<>();
+        String [ ] columns = {"FeeId","FeeName","FeeAmt", "FeeDesc"};
+        Cursor cursor = db.query("Fees",columns,null,null,null,null,"FeeName");
+
+        while (cursor.moveToNext())
+        {
+            fees.add(new Fee(cursor.getString(0),cursor.getString(1),cursor.getDouble(2),cursor.getString(3)));
+        }
+        return  fees;
+    }
+
+    public ArrayList<BookClass> getBookClasses()
+    {
+        ArrayList<BookClass> bookClasses = new ArrayList<>();
+        String [ ] columns = {"ClassId","ClassName", "ClassDesc"};
+        Cursor cursor = db.query("Classes",columns,null,null,null,null,"ClassName");
+
+        while (cursor.moveToNext())
+        {
+            bookClasses.add(new BookClass(cursor.getString(0),cursor.getString(1),cursor.getString(2)));
+        }
+        return  bookClasses;
+    }
+
+    public ArrayList<Region> getRegions()
+    {
+        ArrayList<Region> regions = new ArrayList<>();
+        String [ ] columns = {"RegionId","RegionName"};
+        Cursor cursor = db.query("Regions",columns,null,null,null,null,"RegionName");
+
+        while (cursor.moveToNext())
+        {
+            regions.add(new Region(cursor.getString(0),cursor.getString(1)));
+        }
+        return  regions;
+    }
+
+    public ArrayList<Product> getProductsWithSuppliers()
+    {
+        ArrayList<Product> products = new ArrayList<>();
+        String MY_QUERY = "SELECT DISTINCT b.ProductId, b.ProdName FROM Products_suppliers a INNER JOIN Products  b ON a.ProductId=b.ProductId ORDER BY b.ProdName";
+        Cursor cursor =  db.rawQuery(MY_QUERY,null);
+
+        while (cursor.moveToNext())
+        {
+            products.add(new Product(cursor.getInt(0),cursor.getString(1)));
+        }
+        return  products;
+    }
+    public ArrayList<Supplier> getSuplierssWithProducts()
+    {
+        ArrayList<Supplier> suppliers = new ArrayList<>();
+        String MY_QUERY = "SELECT DISTINCT b.SupplierId, b.SupName FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId ORDER BY b.SupName";
+        Cursor cursor = db.rawQuery(MY_QUERY,null);
+
+        while (cursor.moveToNext())
+        {
+            suppliers.add(new Supplier(cursor.getInt(0),cursor.getString(1)));
+        }
+        return  suppliers;
+    }
+
+    public Product getProductByPSId(int productSupplierId)
+    {
+        String MY_QUERY = "SELECT DISTINCT b.ProductId, b.ProdName FROM Products_suppliers a INNER JOIN Products  b ON a.ProductId=b.ProductId WHERE a.ProductSupplierId=? ORDER BY b.ProdName";
+        String [] args = {productSupplierId+ ""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        cursor.moveToNext();
+        return new Product(cursor.getInt(0),cursor.getString(1));
+    }
+
+    public Supplier getSupplierByPSId(int productSupplierId)
+    {
+        String MY_QUERY = "SELECT DISTINCT b.SupplierId, b.SupName FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductSupplierId=? ORDER BY b.SupName";
+        String [] args = {productSupplierId+ ""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        cursor.moveToNext();
+        return new Supplier(cursor.getInt(0),cursor.getString(1));
+    }
+
+    public ArrayList<Supplier> getSupplierByProductId(int productId)
+    {
+        ArrayList<Supplier> suppliers = new ArrayList<>();
+        String MY_QUERY = "SELECT DISTINCT b.SupplierId, b.SupName FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductId=? ORDER BY b.SupName";
+        String [] args = {productId+ ""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        while (cursor.moveToNext())
+        {
+            suppliers.add(new Supplier(cursor.getInt(0),cursor.getString(1)));
+        }
+        return  suppliers;
+    }
+
+    public int getProdSupIdByIds(int supplierId, int productId)
+    {
+        String MY_QUERY = "SELECT DISTINCT a.ProductSupplierId FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductId=? and b.SupplierId=?";
+        String [] args = {productId+ "",supplierId+""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        cursor.moveToNext();
+        int a =cursor.getInt(0);
+        return  cursor.getInt(0);
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertBookingDetail(BookingDetail bookingDetail)
+    {
+        ContentValues cv = new ContentValues();
+        Random random = new Random();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        cv.put("TripStart",bookingDetail.getTripStart()==null?null:df.format(bookingDetail.getTripStart()));
+        cv.put("TripEnd",bookingDetail.getTripEnd()==null?null:df.format(bookingDetail.getTripEnd()));
+        cv.put("Description", bookingDetail.getDescription().equals(null)?null:bookingDetail.getDescription());
+        cv.put("Destination", bookingDetail.getDestination().equals(null)?null:bookingDetail.getDestination());
+        cv.put("BasePrice", bookingDetail.getBasePrice()==0?null:bookingDetail.getBasePrice());
+        cv.put("AgencyCommission", bookingDetail.getAgencyCommission()==0?null:bookingDetail.getAgencyCommission());
+        cv.put("RegionId",bookingDetail.getRegionId().equals(0)?null:bookingDetail.getRegionId());
+        cv.put("ClassId",bookingDetail.getClassId().equals(0)?null:bookingDetail.getClassId());
+        cv.put("FeeId",bookingDetail.getFeedId().equals(0)?null:bookingDetail.getFeedId());
+        cv.put("ProductSupplierId", bookingDetail.getProductSupplierId()==0?null:bookingDetail.getProductSupplierId());
+        cv.put("BookingId", bookingDetail.getBookingId()==0?null:bookingDetail.getBookingId());
+        cv.put("ItineraryNo", ceil(1000*random.nextDouble()));
+
+
+        if(db.insert("BookingDetails",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Update Booking Detail in the database
+    public boolean updateBookingDetail(BookingDetail bookingDetail){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ContentValues cv = new ContentValues();
+        cv.put("TripStart",bookingDetail.getTripStart()==null?null:df.format(bookingDetail.getTripStart()));
+        cv.put("TripEnd",bookingDetail.getTripEnd()==null?null:df.format(bookingDetail.getTripEnd()));
+        cv.put("Description", bookingDetail.getDescription().equals(null)?null:bookingDetail.getDescription());
+        cv.put("Destination", bookingDetail.getDestination().equals(null)?null:bookingDetail.getDestination());
+        cv.put("BasePrice", bookingDetail.getBasePrice()==0?null:bookingDetail.getBasePrice());
+        cv.put("AgencyCommission", bookingDetail.getAgencyCommission()==0?null:bookingDetail.getAgencyCommission());
+        cv.put("RegionId",bookingDetail.getRegionId().equals(0)?null:bookingDetail.getRegionId());
+        cv.put("ClassId",bookingDetail.getClassId().equals(0)?null:bookingDetail.getClassId());
+        cv.put("FeeId",bookingDetail.getFeedId().equals(0)?null:bookingDetail.getFeedId());
+        cv.put("ProductSupplierId", bookingDetail.getProductSupplierId()==0?null:bookingDetail.getProductSupplierId());
+        String [] args = {bookingDetail.getBookingDetailId()+""};
+        String where = "BookingDetailId=?";
+        if(db.update("BookingDetails",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Booking Detail from Database
+    public boolean deleteBookingDetail(BookingDetail bookingDetail){
+        ContentValues cv = new ContentValues();
+        cv.put("BookingId",-bookingDetail.getBookingId());
+
+        String [] args = {bookingDetail.getBookingDetailId()+""};
+        String where = "BookingDetailId=?";
+        if(db.update("BookingDetails",cv,where,args)!=-1)
+            return true;
+        else return false;
     }
 
 }
