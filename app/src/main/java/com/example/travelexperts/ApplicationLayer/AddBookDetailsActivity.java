@@ -373,12 +373,17 @@ public class AddBookDetailsActivity extends AppCompatActivity {
                     bookingDetail.setBasePrice(etBookingDetailBasePrice.getText()==null?null:Double.parseDouble(etBookingDetailBasePrice.getText() + ""));
                     bookingDetail.setAgencyCommission(etBookingDetailAgCom.getText()==null?null:Double.parseDouble(etBookingDetailAgCom.getText() + ""));
 
-
-
-
                     if(dataSource.updateBookingDetail(bookingDetail))
                     {
-
+                        Toast.makeText(getApplicationContext(), " Product Inserted!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), AddBookingActivity.class);
+                        intent.putExtra("mode","update");
+                        intent.putExtra("Booking",booking);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Product Insert FAIL!", Toast.LENGTH_LONG).show();
                     }
                 }
                 else
@@ -415,18 +420,18 @@ public class AddBookDetailsActivity extends AppCompatActivity {
 
 
                         if (dataSource.insertBookingDetail(bookingDetail)) {
-
+                            Toast.makeText(getApplicationContext(), " Product Updated!", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), AddBookingActivity.class);
+                            intent.putExtra("mode","update");
+                            intent.putExtra("Booking",booking);
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), " Product Update FAIL!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
-
-
-
-                Intent intent = new Intent(getApplicationContext(), AddBookingActivity.class);
-                intent.putExtra("mode","update");
-                intent.putExtra("Booking",booking);
-                startActivity(intent);
-
             }
         });
 
