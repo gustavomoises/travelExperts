@@ -1,14 +1,9 @@
-//Author: Gustavo Lourenco Moises
-//Thread Project - Group 1
-//OOSD Program Spring 2020
-//Date:9/30/2020
-//Travel Agency Application
-
-package com.example.travelexperts;
+package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,39 +12,32 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import com.example.travelexperts.ApplicationLayer.AboutActivity;
-import com.example.travelexperts.ApplicationLayer.BookingActivity;
-import com.example.travelexperts.ApplicationLayer.MiscelaneousActivity;
-import com.example.travelexperts.ApplicationLayer.PackageActivity;
-import com.example.travelexperts.ApplicationLayer.ProductActivity;
-import com.example.travelexperts.ApplicationLayer.SettingsActivity;
 
+import com.example.travelexperts.R;
 
-public class MainActivity extends AppCompatActivity {
+public class AddFeeActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clMainActivity;
-
-
+    ConstraintLayout clAddFee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
+        setContentView(R.layout.activity_add_fee);
         //Set background color form Settings
-        clMainActivity= findViewById(R.id.clMainActivity);
+        clAddFee= findViewById(R.id.clAddFee);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+
+
         switch (basicColor){
             case "White":
-                clMainActivity.setBackgroundColor(Color.WHITE);
+                clAddFee.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clMainActivity.setBackgroundColor(Color.BLUE);
+                clAddFee.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clMainActivity.setBackgroundColor(Color.GREEN);
+                clAddFee.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -107,20 +95,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clMainActivity= findViewById(R.id.clMainActivity);
+        clAddFee= findViewById(R.id.clAddFee);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clMainActivity.setBackgroundColor(Color.WHITE);
+                clAddFee.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clMainActivity.setBackgroundColor(Color.BLUE);
+                clAddFee.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clMainActivity.setBackgroundColor(Color.GREEN);
+                clAddFee.setBackgroundColor(Color.GREEN);
                 break;
         }
     }
+
 }

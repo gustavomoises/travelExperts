@@ -1,6 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.BusinessLayer;
 
-public class BookClass {
+import java.io.Serializable;
+
+public class BookClass implements Serializable {
     private String ClassId;
     private String ClassName;
     private String ClassDes;

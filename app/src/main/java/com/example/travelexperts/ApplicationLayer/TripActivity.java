@@ -1,9 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,31 +15,74 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.BusinessLayer.TripType;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
+
+import java.util.ArrayList;
 
 public class TripActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clTrip;
+    ConstraintLayout clAddTrip;
+    ListView lvListTrip;
+    DataSource dataSource;
+    ArrayList<TripType> trips;
+    ArrayAdapter<TripType> adapterTrip;
+    Button btnAddTrip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
         //Set background color form Settings
-        clTrip= findViewById(R.id.clTrip);
+        clAddTrip= findViewById(R.id.clAddTrip);
+        btnAddTrip=findViewById(R.id.btnAddTrip);
+        lvListTrip=findViewById(R.id.lvListTrip);
+        //Get Fees from database
+        dataSource = new DataSource(this);
+        trips=dataSource.getTripTypes();
+        adapterTrip=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,trips);
+        lvListTrip.setAdapter(adapterTrip);
+
+        btnAddTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddTripActivity.class);
+                intent.putExtra("mode","insert");
+                startActivity(intent);
+            }
+        });
+
+        lvListTrip.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), AddTripActivity.class);
+                intent.putExtra("mode","update");
+                intent.putExtra("Trip",trips.get(position));
+                startActivity(intent);
+            }
+        });
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clTrip.setBackgroundColor(Color.WHITE);
+                clAddTrip.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clTrip.setBackgroundColor(Color.BLUE);
+                clAddTrip.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clTrip.setBackgroundColor(Color.GREEN);
+                clAddTrip.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -93,19 +140,19 @@ public class TripActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clTrip= findViewById(R.id.clTrip);
+        clAddTrip= findViewById(R.id.clAddTrip);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clTrip.setBackgroundColor(Color.WHITE);
+                clAddTrip.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clTrip.setBackgroundColor(Color.BLUE);
+                clAddTrip.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clTrip.setBackgroundColor(Color.GREEN);
+                clAddTrip.setBackgroundColor(Color.GREEN);
                 break;
         }
     }

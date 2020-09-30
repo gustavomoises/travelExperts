@@ -1,9 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,25 +23,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.travelexperts.BusinessLayer.BookClass;
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
-import com.example.travelexperts.BusinessLayer.Customer;
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.Region;
 import com.example.travelexperts.BusinessLayer.Supplier;
-import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
-
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class AddBookDetailsActivity extends AppCompatActivity {
     SharedPreferences prefs;

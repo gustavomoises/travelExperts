@@ -9,7 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationLayer.AddBookDetailsActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddTripActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddSupplierActivity" />
+        <activity android:name=".ApplicationLayer.AddProductItemActivity" />
+        <activity android:name=".ApplicationLayer.AddFeeActivity" />
+        <activity android:name=".ApplicationLayer.AddRegionActivity" />
+        <activity android:name=".ApplicationLayer.AddClassActivity" />
+        <activity android:name=".ApplicationLayer.ProductItemActivity" />
+        <activity android:name=".ApplicationLayer.SupplierActivity" />
+        <activity android:name=".ApplicationLayer.AddBookDetailsActivity" />
         <activity android:name=".ApplicationLayer.AddBookingActivity" />
         <activity android:name=".ApplicationLayer.BookingDetailsActivity" />
         <activity android:name=".ApplicationLayer.RegionActivity" />

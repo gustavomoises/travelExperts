@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/clAddTrip"
+    android:id="@+id/clSupplier"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ApplicationLayer.TripActivity">
+    tools:context=".ApplicationLayer.SupplierActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:text="Trip"
+                    android:text="Supplier"
                     android:textSize="30sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -40,7 +40,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/btnAddTrip"
+                    android:id="@+id/btnAddSupplier"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="60dp"
@@ -59,7 +59,7 @@
             android:orientation="horizontal">
 
             <ListView
-                android:id="@+id/lvListTrip"
+                android:id="@+id/lvListSupplier"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

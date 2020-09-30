@@ -1,7 +1,8 @@
 //Author: Gustavo Lourenco Moises
-//CPMPP 264 - Java Programming - ANDROID
-//Date: 9/24/2020
-//Lab 12
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.BusinessLayer;
 
 import java.io.Serializable;

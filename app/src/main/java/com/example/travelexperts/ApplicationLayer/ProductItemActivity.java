@@ -1,14 +1,9 @@
-//Author: Gustavo Lourenco Moises
-//Thread Project - Group 1
-//OOSD Program Spring 2020
-//Date:9/30/2020
-//Travel Agency Application
-
-package com.example.travelexperts;
+package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,40 +11,76 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
-import com.example.travelexperts.ApplicationLayer.AboutActivity;
-import com.example.travelexperts.ApplicationLayer.BookingActivity;
-import com.example.travelexperts.ApplicationLayer.MiscelaneousActivity;
-import com.example.travelexperts.ApplicationLayer.PackageActivity;
-import com.example.travelexperts.ApplicationLayer.ProductActivity;
-import com.example.travelexperts.ApplicationLayer.SettingsActivity;
 
+import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.DatabaseLayer.DataSource;
+import com.example.travelexperts.R;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class ProductItemActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clMainActivity;
-
+    ConstraintLayout clProductItem;
+    ListView lvListProductItem;
+    DataSource dataSource;
+    ArrayList<Product> productItems;
+    ArrayAdapter<Product> adapterProductItem;
+    Button btnAddProductItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
+        setContentView(R.layout.activity_product_item);
         //Set background color form Settings
-        clMainActivity= findViewById(R.id.clMainActivity);
+        clProductItem= findViewById(R.id.clProductItem);
+        btnAddProductItem=findViewById(R.id.btnAddProductItem);
+        lvListProductItem=findViewById(R.id.lvListProductItem);
+        //Get Fees from database
+        dataSource = new DataSource(this);
+        productItems=dataSource.getProductsWithSuppliers();
+        adapterProductItem=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,productItems);
+        lvListProductItem.setAdapter(adapterProductItem);
+
+
+
+        btnAddProductItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddProductItemActivity.class);
+                intent.putExtra("mode","insert");
+                startActivity(intent);
+            }
+        });
+
+        lvListProductItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), AddProductItemActivity.class);
+                intent.putExtra("mode","update");
+                intent.putExtra("ProductItem",productItems.get(position));
+                startActivity(intent);
+            }
+        });
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clMainActivity.setBackgroundColor(Color.WHITE);
+                clProductItem.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clMainActivity.setBackgroundColor(Color.BLUE);
+                clProductItem.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clMainActivity.setBackgroundColor(Color.GREEN);
+                clProductItem.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -107,20 +138,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clMainActivity= findViewById(R.id.clMainActivity);
+        clProductItem= findViewById(R.id.clProductItem);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clMainActivity.setBackgroundColor(Color.WHITE);
+                clProductItem.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clMainActivity.setBackgroundColor(Color.BLUE);
+                clProductItem.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clMainActivity.setBackgroundColor(Color.GREEN);
+                clProductItem.setBackgroundColor(Color.GREEN);
                 break;
         }
     }
+
 }

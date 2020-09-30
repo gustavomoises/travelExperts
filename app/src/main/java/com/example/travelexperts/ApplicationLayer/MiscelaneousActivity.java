@@ -1,9 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.travelexperts.BusinessLayer.Agent;
 import com.example.travelexperts.R;
-
 import java.util.ArrayList;
 
 public class MiscelaneousActivity extends AppCompatActivity {
@@ -36,8 +37,11 @@ public class MiscelaneousActivity extends AppCompatActivity {
         final ArrayList<String> miscList =new ArrayList<>();
         miscList.add("Class");
         miscList.add("Fee");
+        miscList.add("Product Item");
         miscList.add("Region");
-        miscList.add("Trip");
+        miscList.add("Supplier");
+        miscList.add("Trip Type");
+
 
         adapterMisc=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,miscList);
         lvMiscList.setAdapter(adapterMisc);
@@ -49,23 +53,33 @@ public class MiscelaneousActivity extends AppCompatActivity {
 
                     case 0:
                         Toast.makeText(getApplicationContext(),"Class was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent1 = new Intent(getApplicationContext(), ClassActivity.class);
-                        startActivity(intent1);
+                        Intent intent0 = new Intent(getApplicationContext(), ClassActivity.class);
+                        startActivity(intent0);
                         break;
                     case 1:
                         Toast.makeText(getApplicationContext(), "Fee was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent2 = new Intent(getApplicationContext(), FeeActivity.class);
-                        startActivity(intent2);
+                        Intent intent1 = new Intent(getApplicationContext(), FeeActivity.class);
+                        startActivity(intent1);
                         break;
                     case 2:
-                        Toast.makeText(getApplicationContext(), "Region was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent3 = new Intent(getApplicationContext(), RegionActivity.class);
-                        startActivity(intent3);
+                        Toast.makeText(getApplicationContext(), "Product Item was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent2 = new Intent(getApplicationContext(), ProductItemActivity.class);
+                        startActivity(intent2);
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Trip was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent4 = new Intent(getApplicationContext(), TripActivity.class);
+                    Toast.makeText(getApplicationContext(), "Region was clicked", Toast.LENGTH_LONG).show();
+                    Intent intent3 = new Intent(getApplicationContext(), RegionActivity.class);
+                    startActivity(intent3);
+                    break;
+                    case 4:
+                        Toast.makeText(getApplicationContext(), "Supplier was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent4 = new Intent(getApplicationContext(), SupplierActivity.class);
                         startActivity(intent4);
+                        break;
+                    case 5:
+                        Toast.makeText(getApplicationContext(), "Trip was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent5 = new Intent(getApplicationContext(), TripActivity.class);
+                        startActivity(intent5);
                         break;
                 }
 

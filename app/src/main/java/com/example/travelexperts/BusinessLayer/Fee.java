@@ -1,6 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.BusinessLayer;
 
-public class Fee {
+import java.io.Serializable;
+
+public class Fee implements Serializable {
     private String FeeId;
     private String FeeName;
     private double FeeAmt;

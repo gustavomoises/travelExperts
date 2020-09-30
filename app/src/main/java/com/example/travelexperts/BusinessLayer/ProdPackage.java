@@ -1,8 +1,15 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
+
 package com.example.travelexperts.BusinessLayer;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProdPackage {
+public class ProdPackage implements Serializable {
     private int packageId;
     private String pkgName;
     private Date pkgStartDate;

@@ -1,9 +1,13 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +24,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
@@ -28,7 +31,6 @@ import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -248,21 +250,36 @@ public class AddBookingActivity extends AppCompatActivity {
                     //save in the database
                     booking=dataSource.insertBooking(booking);
 
-                    //update fields
-                    tvBookingNo.setText(booking.getBookingNo());
-                    DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
-                    tvAddBookingDate.setText(df.format(booking.getBookingDate()));
-                    btnAddBookingDetail.setEnabled(true);
-                    NewBooking=false;
+                    if (booking.getBookingId()!=0)
+                    {
+                        Toast.makeText(getApplicationContext(), " New booking Created!!!", Toast.LENGTH_LONG).show();
+                        //update fields
+                        tvBookingNo.setText(booking.getBookingNo());
+                        DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+                        tvAddBookingDate.setText(df.format(booking.getBookingDate()));
+                        btnAddBookingDetail.setEnabled(true);
+                        NewBooking=false;
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Is was NOT possible to Create a new booking!!!", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 else
                 {
                     //update
                     booking.setTravelerCount(Double.parseDouble(etTravelerCount.getText().toString()));
-                    dataSource.updateBooking(booking);
-                    Intent intent2 = new Intent(getApplicationContext(), BookingDetailsActivity.class);
-                    intent2.putExtra("Booking",booking);
-                    startActivity(intent2);
+                    if (dataSource.updateBooking(booking)) {
+                        Toast.makeText(getApplicationContext(), " Booking Updated!!", Toast.LENGTH_LONG).show();
+                        Intent intent2 = new Intent(getApplicationContext(), BookingDetailsActivity.class);
+                        intent2.putExtra("Booking", booking);
+                        startActivity(intent2);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Booking Update Failed!!", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
