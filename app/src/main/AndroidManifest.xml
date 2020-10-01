@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationLayer.AddTripActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddTripTypeActivity"></activity>
         <activity android:name=".ApplicationLayer.AddSupplierActivity" />
         <activity android:name=".ApplicationLayer.AddProductItemActivity" />
         <activity android:name=".ApplicationLayer.AddFeeActivity" />
@@ -21,7 +21,7 @@
         <activity android:name=".ApplicationLayer.AddBookingActivity" />
         <activity android:name=".ApplicationLayer.BookingDetailsActivity" />
         <activity android:name=".ApplicationLayer.RegionActivity" />
-        <activity android:name=".ApplicationLayer.TripActivity" />
+        <activity android:name=".ApplicationLayer.TripTypeActivity" />
         <activity android:name=".ApplicationLayer.ClassActivity" />
         <activity android:name=".ApplicationLayer.FeeActivity" />
         <activity android:name=".ApplicationLayer.SettingsActivity" />

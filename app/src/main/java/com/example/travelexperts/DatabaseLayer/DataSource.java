@@ -599,4 +599,65 @@ public class DataSource {
         return  products;
     }
 
+    //Update Booking Detail in the database
+    public boolean updateProductItem(Product product){
+        ContentValues cv = new ContentValues();
+        cv.put("ProdName",product.getProdName()==null?null:product.getProdName());
+        String [] args = {product.getProductId()+""};
+        String where = "ProductId=?";
+        if(db.update("Products",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertProductItem(Product product)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("ProdName",product.getProdName()==null?null:product.getProdName());
+        if(db.insert("Products",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteProductItem(Product product){
+        String [] args = {product.getProductId()+""};
+        String where = "ProductId=?";
+        if(db.delete("Products",where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    public boolean updateTripType(TripType tripType){
+        ContentValues cv = new ContentValues();
+        cv.put("TripTypeId",tripType.getTripTypeId()+"");
+        cv.put("tTName",tripType.gettTName()==null?null:tripType.gettTName());
+        String [] args = {tripType.getTripTypeId()+""};
+        String where = "TripTypeId=?";
+        if(db.update("TripTypes",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertTripType(TripType tripType)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("TripTypeId",tripType.getTripTypeId()+"");
+        cv.put("tTName",tripType.gettTName()==null?null:tripType.gettTName());
+        if(db.insert("TripTypes",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteTripType(TripType tripType){
+        String [] args = {tripType.getTripTypeId()+""};
+        String where = "TripTypeId=?";
+        if(db.delete("TripTypes",where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+
+
 }

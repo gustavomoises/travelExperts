@@ -11,19 +11,116 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.Supplier;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 public class AddProductItemActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddProductItem;
+    Button btnAddProductItemCancel,btnAddProductItemSave, btnAddProductItemDelete;
+    DataSource dataSource;
+    String mode;
+    Product product;
+    TextView tvAddProductItemProductId;
+    EditText etAddProductItemProdName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product_item);
         //Set background color form Settings
         clAddProductItem= findViewById(R.id.clAddProductItem);
+        btnAddProductItemSave=findViewById(R.id.btnAddProductItemSave);
+        btnAddProductItemCancel=findViewById(R.id.btnAddProductItemCancel);
+        btnAddProductItemDelete=findViewById(R.id.btnAddProductItemDelete);
+        tvAddProductItemProductId=findViewById(R.id.tvAddProductItemProductId);
+        etAddProductItemProdName=findViewById(R.id.etAddProductItemProdName);
+        dataSource = new DataSource(this);
+
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
+        if (mode.equals("update")) {
+            btnAddProductItemDelete.setEnabled(true);
+            product = (Product) intent.getSerializableExtra("ProductItem");
+            tvAddProductItemProductId.setText(product.getProductId()+"");
+            etAddProductItemProdName.setText(product.getProdName());
+
+        }
+        else
+        {
+            btnAddProductItemDelete.setEnabled(false);
+            product=new Product();
+            tvAddProductItemProductId.setText("*");
+            etAddProductItemProdName.setText("");
+
+
+        }
+
+
+        btnAddProductItemCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        btnAddProductItemSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode.equals("update"))
+                {
+                    product.setProdName(etAddProductItemProdName.getText()+"");
+                    if(dataSource.updateProductItem(product))
+                    {
+                        Toast.makeText(getApplicationContext(), " Product Item Updated!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Product Item Update Failed!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                else
+                {
+                    product.setProdName(etAddProductItemProdName.getText()+"");
+                    if(dataSource.insertProductItem(product))
+                    {
+                        Toast.makeText(getApplicationContext(), " Product Item Inserted!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Product Item Insertion Failed!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+        });
+
+        btnAddProductItemDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataSource.deleteProductItem(product);
+                Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 

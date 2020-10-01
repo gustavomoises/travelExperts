@@ -22,14 +22,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.travelexperts.BusinessLayer.Region;
 import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import java.util.ArrayList;
 
-public class TripActivity extends AppCompatActivity {
+public class TripTypeActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddTrip;
     ListView lvListTrip;
@@ -55,7 +54,7 @@ public class TripActivity extends AppCompatActivity {
         btnAddTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddTripActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddTripTypeActivity.class);
                 intent.putExtra("mode","insert");
                 startActivity(intent);
             }
@@ -64,9 +63,9 @@ public class TripActivity extends AppCompatActivity {
         lvListTrip.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), AddTripActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddTripTypeActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Trip",trips.get(position));
+                intent.putExtra("TripType",trips.get(position));
                 startActivity(intent);
             }
         });

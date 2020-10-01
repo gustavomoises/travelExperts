@@ -12,6 +12,9 @@ public class TripType implements Serializable {
     private char tripTypeId;
     private String tTName;
 
+    public TripType() {
+    }
+
     public TripType(char tripTypeId, String tTName) {
         this.tripTypeId = tripTypeId;
         this.tTName = tTName;

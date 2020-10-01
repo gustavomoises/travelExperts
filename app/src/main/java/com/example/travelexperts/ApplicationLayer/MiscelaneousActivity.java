@@ -78,7 +78,7 @@ public class MiscelaneousActivity extends AppCompatActivity {
                         break;
                     case 5:
                         Toast.makeText(getApplicationContext(), "Trip was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent5 = new Intent(getApplicationContext(), TripActivity.class);
+                        Intent intent5 = new Intent(getApplicationContext(), TripTypeActivity.class);
                         startActivity(intent5);
                         break;
                 }
