@@ -374,7 +374,7 @@ public class AddBookDetailsActivity extends AppCompatActivity {
 
                     if(dataSource.updateBookingDetail(bookingDetail))
                     {
-                        Toast.makeText(getApplicationContext(), " Product Inserted!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), " Product Uppdated!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), AddBookingActivity.class);
                         intent.putExtra("mode","update");
                         intent.putExtra("Booking",booking);
@@ -382,7 +382,7 @@ public class AddBookDetailsActivity extends AppCompatActivity {
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), " Product Insert FAIL!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), " Product Update FAILED!", Toast.LENGTH_LONG).show();
                     }
                 }
                 else
@@ -419,7 +419,7 @@ public class AddBookDetailsActivity extends AppCompatActivity {
 
 
                         if (dataSource.insertBookingDetail(bookingDetail)) {
-                            Toast.makeText(getApplicationContext(), " Product Updated!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), " Product Inserted!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), AddBookingActivity.class);
                             intent.putExtra("mode","update");
                             intent.putExtra("Booking",booking);
@@ -427,7 +427,7 @@ public class AddBookDetailsActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(), " Product Update FAIL!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), " Product Insertion FAILED!", Toast.LENGTH_LONG).show();
                         }
                     }
                 }

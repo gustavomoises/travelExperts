@@ -11,19 +11,114 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.BookingDetail;
+import com.example.travelexperts.BusinessLayer.Supplier;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 public class AddSupplierActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddSupplier;
+    Button btnAddSupplierCancel,btnAddSupplierSave, btnAddSupplierDelete;
+    DataSource dataSource;
+    String mode;
+    Supplier supplier;
+    TextView tvAddSupplierSupplierId;
+    EditText etAddSupplierSupName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_supplier);
         //Set background color form Settings
         clAddSupplier= findViewById(R.id.clAddSupplier);
+        btnAddSupplierSave=findViewById(R.id.btnAddSupplierSave);
+        btnAddSupplierCancel=findViewById(R.id.btnAddSupplierCancel);
+        btnAddSupplierDelete=findViewById(R.id.btnAddSupplierDelete);
+        tvAddSupplierSupplierId=findViewById(R.id.tvAddSupplierSupplierId);
+        etAddSupplierSupName=findViewById(R.id.etAddSupplierSupName);
+        dataSource = new DataSource(this);
+
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
+        if (mode.equals("update")) {
+            btnAddSupplierDelete.setEnabled(true);
+            supplier = (Supplier) intent.getSerializableExtra("Supplier");
+            tvAddSupplierSupplierId.setText(supplier.getSupplierId()+"");
+            etAddSupplierSupName.setText(supplier.getSupName());
+
+        }
+        else
+            {
+                btnAddSupplierDelete.setEnabled(false);
+                supplier=new Supplier();
+                tvAddSupplierSupplierId.setText("*");
+                etAddSupplierSupName.setText("");
+
+
+        }
+
+
+        btnAddSupplierCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SupplierActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        btnAddSupplierSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode.equals("update"))
+                {
+                    supplier.setSupName(etAddSupplierSupName.getText()+"");
+                    if(dataSource.updateSupplier(supplier))
+                    {
+                        Toast.makeText(getApplicationContext(), " Supplied Updated!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), SupplierActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Supplier Update Failed!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                else
+                {
+                    supplier.setSupName(etAddSupplierSupName.getText()+"");
+                    if(dataSource.insertSupplier(supplier))
+                    {
+                        Toast.makeText(getApplicationContext(), " Supplied Inserted!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), SupplierActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), " Supplier Insertion Failed!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+        });
+
+        btnAddSupplierDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataSource.deleteSupplier(supplier);
+                Intent intent = new Intent(getApplicationContext(), SupplierActivity.class);
+                startActivity(intent);
+            }
+        });
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 

@@ -44,7 +44,7 @@ public class ProductItemActivity extends AppCompatActivity {
         lvListProductItem=findViewById(R.id.lvListProductItem);
         //Get Fees from database
         dataSource = new DataSource(this);
-        productItems=dataSource.getProductsWithSuppliers();
+        productItems=dataSource.getProducts();
         adapterProductItem=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,productItems);
         lvListProductItem.setAdapter(adapterProductItem);
 

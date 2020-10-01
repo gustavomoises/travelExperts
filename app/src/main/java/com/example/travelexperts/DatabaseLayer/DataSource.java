@@ -543,4 +543,60 @@ public class DataSource {
         else return false;
     }
 
+    //Update Booking Detail in the database
+    public boolean updateSupplier(Supplier supplier){
+        ContentValues cv = new ContentValues();
+        cv.put("SupName",supplier.getSupName()==null?null:supplier.getSupName());
+        String [] args = {supplier.getSupplierId()+""};
+        String where = "SupplierId=?";
+        if(db.update("Suppliers",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertSupplier(Supplier supplier)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("SupName",supplier.getSupName()==null?null:supplier.getSupName());
+        Cursor cursor =db.rawQuery("Select SupplierId from Suppliers order by SupplierId DESC limit 1",null);
+        cursor.moveToNext();
+        int a =cursor.getInt(0);
+        cv.put("SupplierId",a+1);
+        if(db.insert("Suppliers",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteSupplier(Supplier supplier){
+        String [] args = {supplier.getSupplierId()+""};
+        String where = "SupplierId=?";
+        if(db.delete("Suppliers",where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    public ArrayList<Supplier> getSuppliers()
+    {
+        ArrayList<Supplier> suppliers = new ArrayList<>();
+        String MY_QUERY = "SELECT SupplierId, SupName FROM Suppliers  ORDER BY SupName";
+        Cursor cursor =  db.rawQuery(MY_QUERY,null);
+        while (cursor.moveToNext())
+        {
+            suppliers.add(new Supplier(cursor.getInt(0),cursor.getString(1)));
+        }
+        return  suppliers;
+    }
+    public ArrayList<Product> getProducts()
+    {
+        ArrayList<Product> products = new ArrayList<>();
+        String MY_QUERY = "SELECT ProductId, ProdName FROM Products  ORDER BY ProdName";
+        Cursor cursor =  db.rawQuery(MY_QUERY,null);
+        while (cursor.moveToNext())
+        {
+            products.add(new Product(cursor.getInt(0),cursor.getString(1)));
+        }
+        return  products;
+    }
+
 }

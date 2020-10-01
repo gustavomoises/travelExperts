@@ -43,7 +43,7 @@ public class SupplierActivity extends AppCompatActivity {
         lvListSupplier=findViewById(R.id.lvListSupplier);
         //Get Fees from database
         dataSource = new DataSource(this);
-        suppliers=dataSource.getSuplierssWithProducts();
+        suppliers=dataSource.getSuppliers();
         adapterSupplier=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,suppliers);
         lvListSupplier.setAdapter(adapterSupplier);
 
