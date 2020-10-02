@@ -6,16 +6,46 @@
 
 package com.example.travelexperts.DatabaseLayer;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.travelexperts.BusinessLayer.Product;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
+
 public class DBHelper extends SQLiteOpenHelper {
     private static final int version = 1;
     private static final String name= "TravelExpertsSqlLite.db";
+
+
+    //Variable and Constants for Products Table //By Suvanjan Shrestha
+    //Table names
+    private static  final String TABLE_PRODUCTS = "products";
+    //Table columns
+    private static  final String PRODUCT_ID = "ProductId";
+    private static  final String PRODUCT_NAME = "ProdName";
+
+    private static DBHelper mDbHelper;
+
+    //Application Context   //By Suvanjan Shrestha
+    public static synchronized DBHelper getInstance(Context context) {
+
+        if (mDbHelper == null) {
+            mDbHelper = new DBHelper(context.getApplicationContext());
+        }
+        return mDbHelper;
+    }
+
 
     public DBHelper(@Nullable Context context) {
         super(context, name, null, version);
@@ -79,8 +109,81 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("drop table Products");
         db.execSQL("drop table Agencies");
         onCreate(db);
-
      */
-
     }
+
+
+    //function to insert Product    //By Suvanjan Shrestha
+    public void insertProduct(Product product){
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(PRODUCT_NAME, product.ProdName);
+
+            db.insertOrThrow(TABLE_PRODUCTS, null, values);
+            db.setTransactionSuccessful();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            Log.d(TAG, "Error while trying to add post to database");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    //function to view Products    //By Suvanjan Shrestha
+    public List<Product> getAllProducts(){
+        List<Product> productList = new ArrayList<>();
+        String QUERY = "SELECT * FROM Products";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Product product = new Product();
+                    product.ProdName = cursor.getString(cursor.getColumnIndex(PRODUCT_NAME));
+                    product.ProductId = cursor.getInt(cursor.getColumnIndex(PRODUCT_ID));
+                    productList.add(product);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to get data from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return productList;
+    }
+
+
+    //Delete single row from Products   //By Suvanjan Shrestha
+    void deleteProduct(String name) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+            db.execSQL("delete from Products where ProdName ='" + name + "'");
+            db.setTransactionSuccessful();
+        } catch (SQLException e) {
+            Log.d(TAG, "Error while trying to delete product");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    /*//Create Cursor to read data    //By Suvanjan Shrestha
+    public Cursor readProductData()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "select * from products";
+        Cursor cursor = db.rawQuery(qry, null);
+        return cursor;
+    }*/
+
 }
