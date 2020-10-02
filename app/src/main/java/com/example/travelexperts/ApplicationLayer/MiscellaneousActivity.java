@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.example.travelexperts.R;
 import java.util.ArrayList;
 
-public class MiscelaneousActivity extends AppCompatActivity {
+public class MiscellaneousActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clMiscelaneous;
     ListView lvMiscList;
@@ -31,15 +31,17 @@ public class MiscelaneousActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_miscelaneous);
+        setContentView(R.layout.activity_miscellaneous);
 
         lvMiscList = findViewById(R.id.lvMiscList);
         final ArrayList<String> miscList =new ArrayList<>();
+        miscList.add("Affiliation");
         miscList.add("Class");
         miscList.add("Fee");
         miscList.add("Product Item");
         miscList.add("Region");
         miscList.add("Supplier");
+        miscList.add("Reward");
         miscList.add("Trip Type");
 
 
@@ -50,36 +52,46 @@ public class MiscelaneousActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position)
                 {
-
                     case 0:
-                        Toast.makeText(getApplicationContext(),"Class was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent0 = new Intent(getApplicationContext(), ClassActivity.class);
+                        Toast.makeText(getApplicationContext(),"Affiliation was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent0 = new Intent(getApplicationContext(), AffiliationActivity.class);
                         startActivity(intent0);
                         break;
+
                     case 1:
-                        Toast.makeText(getApplicationContext(), "Fee was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent1 = new Intent(getApplicationContext(), FeeActivity.class);
+                        Toast.makeText(getApplicationContext(),"Class was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent1 = new Intent(getApplicationContext(), ClassActivity.class);
                         startActivity(intent1);
                         break;
                     case 2:
-                        Toast.makeText(getApplicationContext(), "Product Item was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent2 = new Intent(getApplicationContext(), ProductItemActivity.class);
+                        Toast.makeText(getApplicationContext(), "Fee was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent2 = new Intent(getApplicationContext(), FeeActivity.class);
                         startActivity(intent2);
                         break;
                     case 3:
-                    Toast.makeText(getApplicationContext(), "Region was clicked", Toast.LENGTH_LONG).show();
-                    Intent intent3 = new Intent(getApplicationContext(), RegionActivity.class);
-                    startActivity(intent3);
-                    break;
-                    case 4:
-                        Toast.makeText(getApplicationContext(), "Supplier was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent4 = new Intent(getApplicationContext(), SupplierActivity.class);
-                        startActivity(intent4);
+                        Toast.makeText(getApplicationContext(), "Product Item was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent3 = new Intent(getApplicationContext(), ProductItemActivity.class);
+                        startActivity(intent3);
                         break;
+                    case 4:
+                    Toast.makeText(getApplicationContext(), "Region was clicked", Toast.LENGTH_LONG).show();
+                    Intent intent4 = new Intent(getApplicationContext(), RegionActivity.class);
+                    startActivity(intent4);
+                    break;
                     case 5:
-                        Toast.makeText(getApplicationContext(), "Trip was clicked", Toast.LENGTH_LONG).show();
-                        Intent intent5 = new Intent(getApplicationContext(), TripTypeActivity.class);
+                        Toast.makeText(getApplicationContext(), "Supplier was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent5 = new Intent(getApplicationContext(), SupplierActivity.class);
                         startActivity(intent5);
+                        break;
+                    case 6:
+                        Toast.makeText(getApplicationContext(), "Rewards was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent6 = new Intent(getApplicationContext(), RewardActivity.class);
+                        startActivity(intent6);
+                        break;
+                    case 7:
+                        Toast.makeText(getApplicationContext(), "Trip was clicked", Toast.LENGTH_LONG).show();
+                        Intent intent7 = new Intent(getApplicationContext(), TripTypeActivity.class);
+                        startActivity(intent7);
                         break;
                 }
 
@@ -137,7 +149,7 @@ public class MiscelaneousActivity extends AppCompatActivity {
                 break;
             case R.id.miMiscelaneous:
                 Toast.makeText(this, item.getTitle()+" was clicked", Toast.LENGTH_LONG).show();
-                Intent intent4 = new Intent(this, MiscelaneousActivity.class);
+                Intent intent4 = new Intent(this, MiscellaneousActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.miSettings:

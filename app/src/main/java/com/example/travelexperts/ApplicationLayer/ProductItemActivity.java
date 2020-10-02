@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.travelexperts.BusinessLayer.Product;
-import com.example.travelexperts.BusinessLayer.Region;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
@@ -117,7 +116,7 @@ public class ProductItemActivity extends AppCompatActivity {
                 break;
             case R.id.miMiscelaneous:
                 Toast.makeText(this, item.getTitle()+" was clicked", Toast.LENGTH_LONG).show();
-                Intent intent4 = new Intent(this, MiscelaneousActivity.class);
+                Intent intent4 = new Intent(this, MiscellaneousActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.miSettings:

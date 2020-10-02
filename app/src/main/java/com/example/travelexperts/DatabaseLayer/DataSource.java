@@ -11,6 +11,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.example.travelexperts.BusinessLayer.Affiliation;
 import com.example.travelexperts.BusinessLayer.Agency;
 import com.example.travelexperts.BusinessLayer.Agent;
 import com.example.travelexperts.BusinessLayer.BookClass;
@@ -22,6 +24,7 @@ import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.ProductSupplier;
 import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.BusinessLayer.Reward;
 import com.example.travelexperts.BusinessLayer.Supplier;
 import com.example.travelexperts.BusinessLayer.TripType;
 
@@ -418,6 +421,33 @@ public class DataSource {
         return  regions;
     }
 
+    public ArrayList<Reward> getRewards()
+    {
+        ArrayList<Reward> rewards = new ArrayList<>();
+        String [ ] columns = {"RewardId","RwdName","RwdDesc"};
+        Cursor cursor = db.query("Rewards",columns,null,null,null,null,"RwdName");
+
+        while (cursor.moveToNext())
+        {
+            rewards.add(new Reward(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
+        }
+        return rewards;
+    }
+
+    public ArrayList<Affiliation> getAffiliations()
+    {
+        ArrayList<Affiliation> affiliations = new ArrayList<>();
+        String [ ] columns = {"AffilitationId","AffName","AffDesc"};
+        Cursor cursor = db.query("Affiliations",columns,null,null,null,null,"AffilitationId");
+
+        while (cursor.moveToNext())
+        {
+            affiliations.add(new Affiliation(cursor.getString(0),cursor.getString(1),cursor.getString(2)));
+        }
+        return affiliations;
+    }
+
+
     public ArrayList<Product> getProductsWithSuppliers()
     {
         ArrayList<Product> products = new ArrayList<>();
@@ -715,6 +745,72 @@ public class DataSource {
         String [] args = {bookClass.getClassId()+""};
         String where = "ClassId=?";
         if(db.delete("Classes",where,args)!=-1)
+            return true;
+        else return false;
+    }
+    public boolean updateAffiliation(Affiliation affiliation){
+        ContentValues cv = new ContentValues();
+        cv.put("AffilitationId",affiliation.getAffiliationId()+"");
+        cv.put("AffName",affiliation.getAffName()==null?null:affiliation.getAffName());
+        cv.put("AffDesc",affiliation.getAffDesc()==null?null:affiliation.getAffDesc());
+        String [] args = {affiliation.getAffiliationId()+""};
+        String where = "AffilitationId=?";
+        if(db.update("Affiliations",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertAffiliation(Affiliation affiliation)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("AffilitationId",affiliation.getAffiliationId()+"");
+        cv.put("AffName",affiliation.getAffName()==null?null:affiliation.getAffName());
+        cv.put("AffDesc",affiliation.getAffDesc()==null?null:affiliation.getAffDesc());
+        if(db.insert("Affiliations",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteAffiliation(Affiliation affiliation){
+        String [] args = {affiliation.getAffiliationId()+""};
+        String where = "AffilitationId=?";
+        if(db.delete("Affiliations",where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Update Booking Detail in the database
+    public boolean updateReward(Reward reward){
+        ContentValues cv = new ContentValues();
+        cv.put("RwdName",reward.getRwdName()==null?null:reward.getRwdName());
+        cv.put("RwdDesc",reward.getRwdDesc()==null?null:reward.getRwdDesc());
+        String [] args = {reward.getRewardId()+""};
+        String where = "RewardId=?";
+        if(db.update("Rewards",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertReward(Reward reward)
+    {
+        ContentValues cv = new ContentValues();
+        Cursor cursor =db.rawQuery("Select RewardId from Rewards order by RewardId DESC limit 1",null);
+        cursor.moveToNext();
+        int a =cursor.getInt(0);
+        cv.put("RewardId",a+1);
+        cv.put("RwdName",reward.getRwdName()==null?null:reward.getRwdName());
+        cv.put("RwdDesc",reward.getRwdDesc()==null?null:reward.getRwdDesc());
+        if(db.insert("Rewards",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteReward(Reward reward){
+        String [] args = {reward.getRewardId()+""};
+        String where = "RewardId=?";
+        if(db.delete("Rewards",where,args)!=-1)
             return true;
         else return false;
     }

@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.BusinessLayer.Region;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
@@ -34,6 +33,19 @@ public class AddFeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_fee);
         //Set background color form Settings
         clAddFee= findViewById(R.id.clAddFee);
+        btnAddFeeCancel=findViewById(R.id.btnAddFeeCancel);
+        btnAddFeeDelete=findViewById(R.id.btnAddFeeDelete);
+        btnAddFeeSave=findViewById(R.id.btnAddFeeSave);
+        etAddFeeFeeId=findViewById(R.id.etAddFeeFeeId);
+        etAddFeeFeeName=findViewById(R.id.etAddFeeFeeName);
+        etAddFeeFeeAmt=findViewById(R.id.etAddFeeFeeAmount);
+        etAddFeeFeeDesc=findViewById(R.id.etAddFeeFeeDesc);
+        dataSource = new DataSource(this);
+
+
+
+
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
@@ -84,7 +96,7 @@ public class AddFeeActivity extends AppCompatActivity {
                 break;
             case R.id.miMiscelaneous:
                 Toast.makeText(this, item.getTitle()+" was clicked", Toast.LENGTH_LONG).show();
-                Intent intent4 = new Intent(this, MiscelaneousActivity.class);
+                Intent intent4 = new Intent(this, MiscellaneousActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.miSettings:

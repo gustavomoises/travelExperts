@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/clAddFee"
+    android:id="@+id/clAddAffiliation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ApplicationLayer.AddFeeActivity">
+    tools:context=".ApplicationLayer.AddAffiliationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:text="Fee"
+                    android:text="Affiliation"
                     android:textSize="30sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -40,7 +40,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvAddFeeFeeId"
+                    android:id="@+id/tvAddAffiliationAffiliationId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -57,7 +57,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/btnAddFeeDelete"
+                    android:id="@+id/btnAddAffiliationDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -88,8 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="13dp"
-                    android:text="Feed Id:"
+                    android:layout_marginTop="12dp"
+                    android:text="Affiliation Id:"
                     android:textSize="18sp" />
 
                 <TextView
@@ -97,8 +97,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Feed Name:"
+                    android:layout_marginTop="21dp"
+                    android:text="Affiliation Name:"
                     android:textSize="18sp" />
 
                 <TextView
@@ -106,17 +106,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Feed Amount:"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/textView17"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="18dp"
-                    android:text="Fee Decription:"
+                    android:layout_marginTop="22dp"
+                    android:text="Affiliation Desccription:"
                     android:textSize="18sp" />
 
             </LinearLayout>
@@ -127,7 +118,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/etAddFeeFeeId"
+                    android:id="@+id/etAddAffiliationAffiliationId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -137,7 +128,7 @@
                     android:text="Name" />
 
                 <EditText
-                    android:id="@+id/etAddFeeFeeName"
+                    android:id="@+id/etAddAffiliationAffName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -147,7 +138,7 @@
                     android:text="Name" />
 
                 <EditText
-                    android:id="@+id/etAddFeeFeeDesc"
+                    android:id="@+id/etAddAffiliationAffDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -155,15 +146,6 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:text="Name" />
-
-                <EditText
-                    android:id="@+id/etAddFeeFeeAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:ems="10"
-                    android:inputType="number" />
 
             </LinearLayout>
         </LinearLayout>
@@ -179,7 +161,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnAddFeeCancel"
+                    android:id="@+id/btnAddAffiliationCancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -189,7 +171,7 @@
                     android:text="Cancel" />
 
                 <Button
-                    android:id="@+id/btnAddFeeSave"
+                    android:id="@+id/btnAddAffiliationSave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"

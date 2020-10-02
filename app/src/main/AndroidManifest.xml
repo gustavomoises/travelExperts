@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationLayer.AddTripTypeActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddAffiliationActivity"></activity>
+        <activity android:name=".ApplicationLayer.AddRewardActivity" />
+        <activity android:name=".ApplicationLayer.AffiliationActivity" />
+        <activity android:name=".ApplicationLayer.RewardActivity" />
+        <activity android:name=".ApplicationLayer.AddTripTypeActivity" />
         <activity android:name=".ApplicationLayer.AddSupplierActivity" />
         <activity android:name=".ApplicationLayer.AddProductItemActivity" />
         <activity android:name=".ApplicationLayer.AddFeeActivity" />
@@ -26,7 +30,7 @@
         <activity android:name=".ApplicationLayer.FeeActivity" />
         <activity android:name=".ApplicationLayer.SettingsActivity" />
         <activity android:name=".ApplicationLayer.AboutActivity" />
-        <activity android:name=".ApplicationLayer.MiscelaneousActivity" />
+        <activity android:name=".ApplicationLayer.MiscellaneousActivity" />
         <activity android:name=".ApplicationLayer.ProductActivity" />
         <activity android:name=".ApplicationLayer.PackageActivity" />
         <activity android:name=".ApplicationLayer.BookingActivity" />
