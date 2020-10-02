@@ -99,7 +99,7 @@ public class AddRegionActivity extends AppCompatActivity {
                         else {
                             if (mode.equals("update")) {
                                 region.setRegionName(etAddRegionRegionName.getText() + "");
-                                region.setRegionName(typeId);
+                                region.setRegionId(typeId);
                                 if (dataSource.updateRegion(region)) {
                                     Toast.makeText(getApplicationContext(), " Region Updated!", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(getApplicationContext(), RegionActivity.class);

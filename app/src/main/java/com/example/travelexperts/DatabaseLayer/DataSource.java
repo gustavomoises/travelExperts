@@ -687,4 +687,37 @@ public class DataSource {
         else return false;
     }
 
+    public boolean updateBookClass(BookClass bookClass){
+        ContentValues cv = new ContentValues();
+        cv.put("ClassId",bookClass.getClassId()+"");
+        cv.put("ClassName",bookClass.getClassName()==null?null:bookClass.getClassName());
+        cv.put("ClassDesc",bookClass.getClassDes()==null?null:bookClass.getClassDes());
+        String [] args = {bookClass.getClassId()+""};
+        String where = "ClassId=?";
+        if(db.update("Classes",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+    //Insert Booking Detail in the database
+    public boolean insertBookClass(BookClass bookClass)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("ClassId",bookClass.getClassId()+"");
+        cv.put("ClassName",bookClass.getClassName()==null?null:bookClass.getClassName());
+        cv.put("ClassDesc",bookClass.getClassDes()==null?null:bookClass.getClassDes());
+        if(db.insert("Classes",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteBookClass(BookClass bookClass){
+        String [] args = {bookClass.getClassId()+""};
+        String where = "ClassId=?";
+        if(db.delete("Classes",where,args)!=-1)
+            return true;
+        else return false;
+    }
+
+
 }

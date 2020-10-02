@@ -11,13 +11,23 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.Fee;
+import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 public class AddFeeActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddFee;
+    Button btnAddFeeCancel,btnAddFeeSave, btnAddFeeDelete;
+    DataSource dataSource;
+    String mode;
+    Fee fee;
+    EditText etAddFeeFeeName, etAddFeeFeeId,etAddFeeFeeDesc,etAddFeeFeeAmt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
