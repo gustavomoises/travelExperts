@@ -11,7 +11,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import com.example.travelexperts.BusinessLayer.Agency;
 import com.example.travelexperts.BusinessLayer.Agent;
 import com.example.travelexperts.BusinessLayer.BookClass;
@@ -658,6 +657,34 @@ public class DataSource {
         else return false;
     }
 
+    public boolean updateRegion(Region region){
+        ContentValues cv = new ContentValues();
+        cv.put("RegionId",region.getRegionId()+"");
+        cv.put("RegionName",region.getRegionName()==null?null:region.getRegionName());
+        String [] args = {region.getRegionId()+""};
+        String where = "RegionId=?";
+        if(db.update("Regions",cv,where,args)!=-1)
+            return true;
+        else return false;
+    }
 
+    //Insert Booking Detail in the database
+    public boolean insertRegion(Region region)
+    {
+        ContentValues cv = new ContentValues();
+        cv.put("RegionId",region.getRegionId()+"");
+        cv.put("RegionName",region.getRegionName()==null?null:region.getRegionName());
+        if(db.insert("Regions",null,cv)!=-1)
+            return true;
+        else return false;
+    }
+    //Delete Agent from Database
+    public boolean deleteRegion(Region region){
+        String [] args = {region.getRegionId()+""};
+        String where = "RegionId=?";
+        if(db.delete("Regions",where,args)!=-1)
+            return true;
+        else return false;
+    }
 
 }
