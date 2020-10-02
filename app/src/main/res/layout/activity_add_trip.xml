@@ -5,7 +5,7 @@
     android:id="@+id/clAddTrip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ApplicationLayer.AddTripActivity">
+    tools:context=".ApplicationLayer.AddTripTypeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/etAddTripTyprTripId"
+                    android:id="@+id/etAddTripTypeTripId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -152,7 +152,7 @@
                     android:text="Cancel" />
 
                 <Button
-                    android:id="@+id/brnAddTripTypeSave"
+                    android:id="@+id/btnAddTripTypeSave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
