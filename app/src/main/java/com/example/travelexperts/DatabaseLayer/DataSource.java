@@ -215,7 +215,6 @@ public class DataSource {
             packageProducts.add(new ProductSupplier(cursor.getInt(0), cursor.getInt(1),cursor.getInt(2)));
         }
         return  packageProducts;
-
     }
 
     //Get Package by id

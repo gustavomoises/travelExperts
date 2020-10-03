@@ -9,8 +9,8 @@ package com.example.travelexperts.BusinessLayer;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private int ProductId;
-    private String ProdName;
+    public int ProductId;
+    public String ProdName;
 
     //Constructor no arguments
     public Product() {

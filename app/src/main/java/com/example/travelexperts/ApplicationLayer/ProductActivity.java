@@ -1,13 +1,5 @@
-//Author: Gustavo Lourenco Moises
-//Thread Project - Group 1
-//OOSD Program Spring 2020
-//Date:9/30/2020
-//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,30 +7,73 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.travelexperts.BusinessLayer.Listener;
+import com.example.travelexperts.BusinessLayer.ProductAdapter;
+import com.example.travelexperts.DatabaseLayer.DBHelper;
 import com.example.travelexperts.R;
-public class ProductActivity extends AppCompatActivity {
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+/*
+ * Author: Suvanjan Shrestha
+ * Date: 02/10/2020
+ * TravelExperts Android App
+ */
+
+public class ProductActivity extends AppCompatActivity implements Listener {
     SharedPreferences prefs;
-    ConstraintLayout clProduct;
+    RelativeLayout rlProduct;
+    RecyclerView recyclerView;
+    ProductAdapter productAdapter;
+    FloatingActionButton fab;
+    DBHelper dbHelper;
+    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+        setTitle("Products");
+
+        fab = findViewById(R.id.fab);
+        dbHelper = DBHelper.getInstance(getApplicationContext());
+
+        recyclerView = findViewById(R.id.recyclerView);
+        productAdapter = new ProductAdapter(this, dbHelper.getAllProducts());
+        recyclerView.setAdapter(productAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
+
+
         //Set background color form Settings
-        clProduct= findViewById(R.id.clProduct);
+        rlProduct = findViewById(R.id.rlProduct);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clProduct.setBackgroundColor(Color.WHITE);
+                rlProduct.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clProduct.setBackgroundColor(Color.BLUE);
+                rlProduct.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clProduct.setBackgroundColor(Color.GREEN);
+                rlProduct.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -96,20 +131,33 @@ public class ProductActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clProduct= findViewById(R.id.clProduct);
+        rlProduct = findViewById(R.id.rlProduct);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clProduct.setBackgroundColor(Color.WHITE);
+                rlProduct.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clProduct.setBackgroundColor(Color.BLUE);
+                rlProduct.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clProduct.setBackgroundColor(Color.GREEN);
+                rlProduct.setBackgroundColor(Color.GREEN);
                 break;
         }
+    }
+
+    //Intent to go to next activity
+    public void addItem(){
+        Intent intent = new Intent(this, AddProductActivity.class);
+        startActivity(intent);
+        //productAdapter.swapCursor(getAllProducts());
+    }
+
+
+    @Override
+    public void nameToChange(String name) {
+
     }
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TravelExperts</string>
+    <string name="products">Products</string>
+    <string name="supplier">Supplier:</string>
+    <string name="product">Product</string>
+    <string name="product_name">Product Name:</string>
+    <string name="enter_the_product_name">Enter the product name</string>
 </resources>
