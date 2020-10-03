@@ -12,14 +12,17 @@ public class Product implements Serializable {
     private int ProductId;
     private String ProdName;
 
+    //Constructor no arguments
     public Product() {
     }
 
+    //Constructor 2 arguments
     public Product(int productId, String prodName) {
         ProductId = productId;
         ProdName = prodName;
     }
 
+    //Getters and Setters
     public int getProductId() {
         return ProductId;
     }
@@ -36,6 +39,7 @@ public class Product implements Serializable {
         ProdName = prodName;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  ProdName;

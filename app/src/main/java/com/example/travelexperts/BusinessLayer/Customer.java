@@ -20,9 +20,11 @@ public class Customer {
     private String custEmail;
     private int AgentId;
 
+    //Constructor no arguments
     public Customer() {
     }
 
+    //Constructor 12 arguments
     public Customer(int customerId, String custFirstName, String custLastName, String custAddress, String custCity, String custProv, String custPostal, String custCountry, String custHomePhone, String custBusPhone, String custEmail, int agentId) {
         this.customerId = customerId;
         this.custFirstName = custFirstName;
@@ -38,6 +40,7 @@ public class Customer {
         AgentId = agentId;
     }
 
+    //Getters and Setters
     public int getCustomerId() {
         return customerId;
     }
@@ -134,6 +137,7 @@ public class Customer {
         AgentId = agentId;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return custFirstName + " " + custLastName;

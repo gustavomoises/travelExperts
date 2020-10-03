@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("harv","creating database");
+        //Log.d("harv","creating database");
         /*
         //Create table Agents
         String sql= "CREATE TABLE Agents(" +
@@ -74,7 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Update tables if new version is available
-        Log.d("harv","upgrading database, old version: "+oldVersion+" new version: "+newVersion);
+        //Log.d("harv","upgrading database, old version: "+oldVersion+" new version: "+newVersion);
     /*
         db.execSQL("drop table Products");
         db.execSQL("drop table Agencies");

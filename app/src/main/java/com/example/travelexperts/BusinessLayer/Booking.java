@@ -20,9 +20,11 @@ public class Booking implements Serializable {
     private char tripTypeId;
     private int packageId;
 
+    //Constructor no arguments
     public Booking() {
     }
 
+    //Constructor 8 arguments
     public Booking(int bookingId, Date bookingDate, String bookingNo, double travelerCount, int customerId, char tripTypeId, int packageId) {
         this.bookingId = bookingId;
         this.bookingDate = bookingDate;
@@ -33,6 +35,7 @@ public class Booking implements Serializable {
         this.packageId = packageId;
     }
 
+    //Getters and Setters
     public int getBookingId() {
         return bookingId;
     }
@@ -89,6 +92,7 @@ public class Booking implements Serializable {
         this.packageId = packageId;
     }
 
+    //toString Method
     @Override
     public String toString() {
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");

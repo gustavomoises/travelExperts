@@ -11,15 +11,18 @@ public class ProductSupplier {
     private int ProductId;
     private int SupplierId;
 
+    //Constructor no arguments
     public ProductSupplier() {
     }
 
+    //Constructor 3 arguments
     public ProductSupplier(int productSupplierId, int productId, int supplierId) {
         ProductSupplierId = productSupplierId;
         ProductId = productId;
         SupplierId = supplierId;
     }
 
+    //Getters and Setters
     public int getProductSupplierId() {
         return ProductSupplierId;
     }
@@ -44,6 +47,7 @@ public class ProductSupplier {
         SupplierId = supplierId;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return "ProductSupplierId=" + ProductSupplierId +

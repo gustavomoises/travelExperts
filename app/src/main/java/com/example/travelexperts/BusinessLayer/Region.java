@@ -12,14 +12,17 @@ public class Region implements Serializable {
     private String RegionId;
     private String RegionName;
 
+    //Constructor no arguments
     public Region() {
     }
 
+    //Constructor 2 arguments
     public Region(String regionId, String regionName) {
         RegionId = regionId;
         RegionName = regionName;
     }
 
+    //Getters and Setters
     public String getRegionId() {
         return RegionId;
     }
@@ -36,6 +39,7 @@ public class Region implements Serializable {
         RegionName = regionName;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  RegionName;

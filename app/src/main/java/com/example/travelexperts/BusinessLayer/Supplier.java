@@ -12,14 +12,17 @@ public class Supplier implements Serializable {
     private int SupplierId;
     private String SupName;
 
+    //Constructor no arguments
     public Supplier() {
     }
 
+    //Constructor 2 arguments
     public Supplier(int supplierId, String supName) {
         SupplierId = supplierId;
         SupName = supName;
     }
 
+    //Getters and Setters
     public int getSupplierId() {
         return SupplierId;
     }
@@ -36,6 +39,7 @@ public class Supplier implements Serializable {
         SupName = supName;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  SupName ;

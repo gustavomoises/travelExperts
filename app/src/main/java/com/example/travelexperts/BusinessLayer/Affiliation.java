@@ -1,3 +1,8 @@
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
 package com.example.travelexperts.BusinessLayer;
 
 import java.io.Serializable;
@@ -7,15 +12,18 @@ public class Affiliation implements Serializable {
     private String AffName;
     private String AffDesc;
 
+    //Constructor no arguments
     public Affiliation() {
     }
 
+    //Constructor 3 arguments
     public Affiliation(String affiliationId, String affName, String affDesc) {
         AffiliationId = affiliationId;
         AffName = affName;
         AffDesc = affDesc;
     }
 
+    //Getters and Setters
     public String getAffiliationId() {
         return AffiliationId;
     }
@@ -40,6 +48,7 @@ public class Affiliation implements Serializable {
         AffDesc = affDesc;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  AffiliationId;

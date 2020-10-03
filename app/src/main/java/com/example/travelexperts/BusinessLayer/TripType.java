@@ -12,14 +12,17 @@ public class TripType implements Serializable {
     private char tripTypeId;
     private String tTName;
 
+    //Constructor no arguments
     public TripType() {
     }
 
+    //Constructor 2 arguments
     public TripType(char tripTypeId, String tTName) {
         this.tripTypeId = tripTypeId;
         this.tTName = tTName;
     }
 
+    //Getters and Setters
     public char getTripTypeId() {
         return tripTypeId;
     }
@@ -36,6 +39,7 @@ public class TripType implements Serializable {
         this.tTName = tTName;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return tTName;

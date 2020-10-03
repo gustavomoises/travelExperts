@@ -12,15 +12,18 @@ public class BookClass implements Serializable {
     private String ClassName;
     private String ClassDes;
 
+    //Constructor no arguments
     public BookClass() {
     }
 
+    //Constructor 3 arguments
     public BookClass(String classId, String className, String classDes) {
         ClassId = classId;
         ClassName = className;
         ClassDes = classDes;
     }
 
+    //Getters and Setters
     public String getClassId() {
         return ClassId;
     }
@@ -45,6 +48,7 @@ public class BookClass implements Serializable {
         ClassDes = classDes;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return ClassName;

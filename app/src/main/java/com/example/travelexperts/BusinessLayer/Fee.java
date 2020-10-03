@@ -13,9 +13,11 @@ public class Fee implements Serializable {
     private double FeeAmt;
     private String FeeDesc;
 
+    //Constructor no arguments
     public Fee() {
     }
 
+    //Constructor 4 arguments
     public Fee(String feeId, String feeName, double feeAmt, String feeDesc) {
         FeeId = feeId;
         FeeName = feeName;
@@ -23,6 +25,7 @@ public class Fee implements Serializable {
         FeeDesc = feeDesc;
     }
 
+    //Getters and Setters
     public String getFeeId() {
         return FeeId;
     }
@@ -55,6 +58,7 @@ public class Fee implements Serializable {
         FeeDesc = feeDesc;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return FeeName;

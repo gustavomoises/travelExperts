@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- this is a comment
+//Author: Gustavo Lourenco Moises
+//Thread Project - Group 1
+//OOSD Program Spring 2020
+//Date:9/30/2020
+//Travel Agency Application
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

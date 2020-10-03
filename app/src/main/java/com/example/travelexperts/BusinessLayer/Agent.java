@@ -21,6 +21,7 @@ public class Agent implements Serializable {
     //Constructor no Arguments
     public Agent() {
     }
+
     //Constructor with 8 arguments
     public Agent(int agentId, String agtFirstName, String agtMiddleInitial, String agtLastName, String agtBusPhone, String agtEmail, String agtPosition, int agtAgency) {
         AgentId = agentId;
@@ -33,7 +34,7 @@ public class Agent implements Serializable {
         this.agtAgency = agtAgency;
     }
 
-    //Getter and Setters
+    //Getters and Setters
     public int getAgentId() {
         return AgentId;
     }
@@ -98,7 +99,7 @@ public class Agent implements Serializable {
         this.agtAgency = agtAgency;
     }
 
-    //tostring Method
+    //toString Method
     @Override
     public String toString() {
         return  agtFirstName +  " "+ agtLastName + " - "+agtEmail;

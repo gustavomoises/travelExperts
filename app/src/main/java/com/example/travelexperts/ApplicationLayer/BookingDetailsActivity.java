@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
+import com.example.travelexperts.BusinessLayer.Fee;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.ProductSupplier;
 import com.example.travelexperts.BusinessLayer.TripType;
@@ -44,7 +45,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
     Customer customer;
     ProdPackage prodPackage;
     DataSource dataSource;
-    TextView tvBookingNo,tvBookingDate, tvTravelerCount,tvCustomerBookingDetail,tvTripType, tvBookingSubTotal, tvBookingAgencyCommission,tvBookingTotal;
+    TextView tvBookingNo,tvBookingDate, tvTravelerCount,tvCustomerBookingDetail,tvTripType, tvBookingSubTotal, tvBookingAgencyCommission,tvBookingAgencyFee,tvBookingTotal;
     ListView lvBookingPackage, lvBookingProducts;
     ArrayList<BookingDetail> bookingProducts;
     ArrayList<ProductSupplier> packageProducts;
@@ -67,6 +68,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         tvTripType=findViewById(R.id.tvTripType);
         tvBookingSubTotal=findViewById(R.id.tvBookingSubTotal);
         tvBookingAgencyCommission=findViewById(R.id.tvBookingAgencyCommission);
+        tvBookingAgencyFee=findViewById(R.id.tvBookingAgencyFee);
         tvBookingTotal=findViewById(R.id.tvBookingTotal);
         lvBookingPackage=findViewById(R.id.lvBookingPackage);
         lvBookingProducts=findViewById(R.id.lvBookingProducts);
@@ -88,6 +90,8 @@ public class BookingDetailsActivity extends AppCompatActivity {
         costProducts = new ArrayList<>();
         Double bookProd=0.0;
         Double agencyCommission=0.0;
+        Double agencyFee=0.0;
+        ArrayList<Fee> fees=dataSource.getFees();
         customer=dataSource.getCustomerById(booking.getCustomerId());
         tvCustomerBookingDetail.setText(customer.getCustFirstName()+" "+customer.getCustLastName());
         bookingDetails= dataSource.getBookingDetailByBookingId(booking.getBookingId());
@@ -96,6 +100,15 @@ public class BookingDetailsActivity extends AppCompatActivity {
             costProducts.add(booking.getTravelerCount()*bk.getBasePrice());
             bookProd+= booking.getTravelerCount()*bk.getBasePrice();
             agencyCommission += booking.getTravelerCount()*bk.getAgencyCommission();
+            for (Fee f:fees)
+            {
+                if (f.getFeeId().equals(bk.getFeedId()))
+                {
+                    agencyFee+= booking.getTravelerCount()*f.getFeeAmt();
+                    break;
+                }
+            }
+
 
         }
         if (booking.getPackageId()!=0){
@@ -108,7 +121,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
             ArrayList<HashMap<String,String>> data = new ArrayList<>();
             for (ProdPackage p :packages){
                 HashMap<String,String> map = new HashMap<>();
-                map.put("desc",p.getPkgDec());
+                map.put("desc",p.getPkgName()+" - "+p.getPkgDec());
                 map.put("unitPrice", String.format("$ %.2f",p.getPkgBasePrice()));
                 map.put("qty",String.format("%.0f",booking.getTravelerCount()));
                 map.put("total",String.format("$ %.2f",booking.getTravelerCount()*prodPackage.getPkgBasePrice()));
@@ -123,8 +136,8 @@ public class BookingDetailsActivity extends AppCompatActivity {
         }
         tvBookingSubTotal.setText(String.format("$ %.2f",bookProd));
         tvBookingAgencyCommission.setText(String.format("$ %.2f",agencyCommission));
-
-        Double bookTotal = bookProd + agencyCommission;
+        tvBookingAgencyFee.setText(String.format("$ %.2f",agencyFee));
+        Double bookTotal = bookProd + agencyCommission+agencyFee;
         tvBookingTotal.setText(String.format("$ %.2f",bookTotal));
 
         btnEditBookingDetail.setOnClickListener(new View.OnClickListener() {

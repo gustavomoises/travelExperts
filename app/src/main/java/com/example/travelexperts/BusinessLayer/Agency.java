@@ -8,10 +8,12 @@ package com.example.travelexperts.BusinessLayer;
 public class Agency {
     private int AgencyId;
 
+    //Constructor 1 argument
     public Agency(int agencyId) {
         AgencyId = agencyId;
     }
 
+    //Getters and Setters
     public int getAgencyId() {
         return AgencyId;
     }
@@ -20,6 +22,7 @@ public class Agency {
         AgencyId = agencyId;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  AgencyId+"";

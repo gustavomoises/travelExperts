@@ -18,9 +18,11 @@ public class ProdPackage implements Serializable {
     private double pkgBasePrice;
     private double pkgAgencyCommission;
 
+    //Constructor no arguments
     public ProdPackage() {
     }
 
+    //Constructor 7 arguments
     public ProdPackage(int packageId, String pkgName, Date pkgStartDate, Date pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
         this.packageId = packageId;
         this.pkgName = pkgName;
@@ -31,6 +33,7 @@ public class ProdPackage implements Serializable {
         this.pkgAgencyCommission = pkgAgencyCommission;
     }
 
+    //Getters and Setters
     public int getPackageId() {
         return packageId;
     }
@@ -87,6 +90,7 @@ public class ProdPackage implements Serializable {
         this.pkgAgencyCommission = pkgAgencyCommission;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return  pkgName + "  "+pkgDec;

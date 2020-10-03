@@ -23,9 +23,11 @@ public class BookingDetail implements Serializable {
     private String feedId;
     private int productSupplierId;
 
+    //Constructor no arguments
     public BookingDetail() {
     }
 
+    //Constructor 13 arguments
     public BookingDetail(int bookingDetailId, double itineraryNo, Date tripStart, Date tripEnd, String description, String destination, double basePrice, double agencyCommission, int bookingId, String regionId, String classId, String feedId, int productSupplierId) {
         this.bookingDetailId = bookingDetailId;
         this.itineraryNo = itineraryNo;
@@ -42,6 +44,7 @@ public class BookingDetail implements Serializable {
         this.productSupplierId = productSupplierId;
     }
 
+    //Getters and Setters
     public int getBookingDetailId() {
         return bookingDetailId;
     }
@@ -146,6 +149,7 @@ public class BookingDetail implements Serializable {
         this.productSupplierId = productSupplierId;
     }
 
+    //toString Method
     @Override
     public String toString() {
         return description+" - "+destination;
