@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.example.travelexperts.ApplicationLayer.AboutActivity;
 import com.example.travelexperts.ApplicationLayer.BookingActivity;
-import com.example.travelexperts.ApplicationLayer.MiscelaneousActivity;
+import com.example.travelexperts.ApplicationLayer.MiscellaneousActivity;
 import com.example.travelexperts.ApplicationLayer.PackageActivity;
 import com.example.travelexperts.ApplicationLayer.ProductActivity;
 import com.example.travelexperts.ApplicationLayer.SettingsActivity;
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.miMiscelaneous:
                 Toast.makeText(this, item.getTitle()+" was clicked", Toast.LENGTH_LONG).show();
-                Intent intent4 = new Intent(this, MiscelaneousActivity.class);
+                Intent intent4 = new Intent(this, MiscellaneousActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.miSettings:

@@ -16,110 +16,111 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.Affiliation;
+import com.example.travelexperts.BusinessLayer.BookClass;
 import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-public class AddTripTypeActivity extends AppCompatActivity {
+public class AddAffiliationActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clAddSTrip;
-    Button btnAddTripTypeCancel,btnAddTripTypeSave, btnAddTripTypeDelete;
+    ConstraintLayout clAddAffiliation;
+    Button btnAddAffiliationCancel,btnAddAffiliationSave, btnAddAffiliationDelete;
     DataSource dataSource;
     String mode;
-    TripType tripType;
-    EditText etAddTripTypeTripTypeName, etAddTripTypeTripTypeId;
-
+    Affiliation affiliation;
+    EditText etAddAffiliationAffiliationId, etAddAffiliationAffName,etAddAffiliationAffDesc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_trip);
+        setContentView(R.layout.activity_add_affiliation);
         //Set background color form Settings
-        clAddSTrip= findViewById(R.id.clAddTrip);
-        btnAddTripTypeDelete=findViewById(R.id.btnAddTripTypeDelete);
-        btnAddTripTypeSave=findViewById(R.id.btnAddTripTypeSave);
-        btnAddTripTypeCancel=findViewById(R.id.btnAddTripTypeCancel);
-        etAddTripTypeTripTypeId=findViewById(R.id.etAddTripTypeTripId);
-        etAddTripTypeTripTypeName=findViewById(R.id.etAddTripTypeTripTypeName);
+        clAddAffiliation= findViewById(R.id.clAddAffiliation);
+        btnAddAffiliationSave=findViewById(R.id.btnAddAffiliationSave);
+        btnAddAffiliationCancel=findViewById(R.id.btnAddAffiliationCancel);
+        btnAddAffiliationDelete=findViewById(R.id.btnAddAffiliationDelete);
+        etAddAffiliationAffiliationId=findViewById(R.id.etAddAffiliationAffiliationId);
+        etAddAffiliationAffName=findViewById(R.id.etAddAffiliationAffName);
+        etAddAffiliationAffDesc=findViewById(R.id.etAddAffiliationAffDesc);
         dataSource = new DataSource(this);
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
         if (mode.equals("update")) {
-            btnAddTripTypeDelete.setEnabled(true);
-            tripType = (TripType) intent.getSerializableExtra("TripType");
-            etAddTripTypeTripTypeName.setText(tripType.gettTName()+"");
-            etAddTripTypeTripTypeId.setText(tripType.getTripTypeId()+"");
-
+            btnAddAffiliationDelete.setEnabled(true);
+            affiliation = (Affiliation) intent.getSerializableExtra("Affiliation");
+            etAddAffiliationAffName.setText(affiliation.getAffName()+"");
+            etAddAffiliationAffiliationId.setText(affiliation.getAffiliationId()+"");
+            etAddAffiliationAffDesc.setText(affiliation.getAffDesc()+"");
         }
         else
         {
-            btnAddTripTypeDelete.setEnabled(false);
-            tripType=new TripType();
-            etAddTripTypeTripTypeName.setText("");
-            etAddTripTypeTripTypeId.setText("");
-
-
+            btnAddAffiliationDelete.setEnabled(false);
+            affiliation=new Affiliation();
+            etAddAffiliationAffName.setText("");
+            etAddAffiliationAffiliationId.setText("");
+            etAddAffiliationAffDesc.setText("");
         }
-
-
-        btnAddTripTypeCancel.setOnClickListener(new View.OnClickListener() {
+        btnAddAffiliationCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TripTypeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AffiliationActivity.class);
                 startActivity(intent);
 
             }
         });
 
-        btnAddTripTypeSave.setOnClickListener(new View.OnClickListener() {
+        btnAddAffiliationSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String typeId=etAddTripTypeTripTypeId.getText()+"";
+                String typeId=etAddAffiliationAffiliationId.getText()+"";
                 if (typeId.length()==0)
-                    Toast.makeText(getApplicationContext(), " One character is required for the trip Id", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), " Affiliation Id is required.", Toast.LENGTH_LONG).show();
                 else
                 {
-                    if (typeId.length()>1)
-                        Toast.makeText(getApplicationContext(), " Only character is required for the trip Id", Toast.LENGTH_LONG).show();
+                    if (typeId.length()>10)
+                        Toast.makeText(getApplicationContext(), " Maximum of 10 characters is required for the Affiliation Id", Toast.LENGTH_LONG).show();
                     else {
                         boolean exist = false;
                         int k=0;
-                        for (TripType tt : dataSource.getTripTypes()) {
+                        for (Affiliation r : dataSource.getAffiliations()) {
                             if (mode.equals("update"))
                             {
-                                if (tt.getTripTypeId() == typeId.charAt(0) && tripType.getTripTypeId()!=typeId.charAt(0))
+                                if (r.getAffiliationId().equals(typeId) && !(affiliation.getAffiliationId().equals(typeId)))
                                     exist = true;
                             }
                             else
                             {
-                                if (tt.getTripTypeId() == typeId.charAt(0))
+                                if (r.getAffiliationId().equals(typeId))
                                     exist = true;
                             }
 
                         }
                         if (exist)
-                            Toast.makeText(getApplicationContext(), " Character associated to another trip type. Please, choose another character!!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), " Id associated to another affiliation. Please, choose another Id!!!", Toast.LENGTH_LONG).show();
                         else {
                             if (mode.equals("update")) {
-                                tripType.settTName(etAddTripTypeTripTypeName.getText() + "");
-                                tripType.setTripTypeId(typeId.charAt(0));
-                                if (dataSource.updateTripType(tripType)) {
-                                    Toast.makeText(getApplicationContext(), " Trip Type Updated!", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(), TripTypeActivity.class);
+                                affiliation.setAffName(etAddAffiliationAffName.getText() + "");
+                                affiliation.setAffiliationId(typeId);
+                                affiliation.setAffDesc(etAddAffiliationAffDesc.getText() + "");
+                                if (dataSource.updateAffiliation(affiliation)) {
+                                    Toast.makeText(getApplicationContext(), " Affiliation Updated!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), AffiliationActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), " TripType Update Failed!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), " Affiliation Update Failed!", Toast.LENGTH_LONG).show();
                                 }
 
                             } else {
-                                tripType.settTName(etAddTripTypeTripTypeName.getText() + "");
-                                tripType.setTripTypeId(typeId.charAt(0));
-                                if (dataSource.insertTripType(tripType)) {
-                                    Toast.makeText(getApplicationContext(), " TripType Inserted!", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(), TripTypeActivity.class);
+                                affiliation.setAffName(etAddAffiliationAffName.getText() + "");
+                                affiliation.setAffiliationId(typeId);
+                                affiliation.setAffDesc(etAddAffiliationAffDesc.getText() + "");
+                                if (dataSource.insertAffiliation(affiliation)) {
+                                    Toast.makeText(getApplicationContext(), " Affiliation Inserted!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(),AffiliationActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(getApplicationContext(), " Trip Type Insertion Failed!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), " Affiliation Insertion Failed!", Toast.LENGTH_LONG).show();
                                 }
                             }
 
@@ -129,14 +130,16 @@ public class AddTripTypeActivity extends AppCompatActivity {
             }
         });
 
-        btnAddTripTypeDelete.setOnClickListener(new View.OnClickListener() {
+        btnAddAffiliationDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataSource.deleteTripType(tripType);
-                Intent intent = new Intent(getApplicationContext(), TripTypeActivity.class);
+                dataSource.deleteAffiliation(affiliation);
+                Intent intent = new Intent(getApplicationContext(), AffiliationActivity.class);
                 startActivity(intent);
             }
         });
+
+
 
 
 
@@ -150,13 +153,13 @@ public class AddTripTypeActivity extends AppCompatActivity {
 
         switch (basicColor){
             case "White":
-                clAddSTrip.setBackgroundColor(Color.WHITE);
+                clAddAffiliation.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clAddSTrip.setBackgroundColor(Color.BLUE);
+                clAddAffiliation.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clAddSTrip.setBackgroundColor(Color.GREEN);
+                clAddAffiliation.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -214,20 +217,21 @@ public class AddTripTypeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clAddSTrip= findViewById(R.id.clAddTrip);
+        clAddAffiliation= findViewById(R.id.clAddAffiliation);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clAddSTrip.setBackgroundColor(Color.WHITE);
+                clAddAffiliation.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clAddSTrip.setBackgroundColor(Color.BLUE);
+                clAddAffiliation.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clAddSTrip.setBackgroundColor(Color.GREEN);
+                clAddAffiliation.setBackgroundColor(Color.GREEN);
                 break;
         }
     }
+
 }

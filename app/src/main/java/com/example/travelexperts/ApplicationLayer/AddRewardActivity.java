@@ -17,102 +17,98 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.Affiliation;
+import com.example.travelexperts.BusinessLayer.Reward;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-public class AddProductItemActivity extends AppCompatActivity {
+public class AddRewardActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clAddProductItem;
-    Button btnAddProductItemCancel,btnAddProductItemSave, btnAddProductItemDelete;
+    ConstraintLayout clAddReward;
+    Button btnAddRewardCancel,btnAddRewardSave, btnAddRewardDelete;
     DataSource dataSource;
     String mode;
-    Product product;
-    TextView tvAddProductItemProductId;
-    EditText etAddProductItemProdName;
+    Reward reward;
+    TextView tvAddRewardId;
+    EditText etAddRwdName,etAddRwdDesc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product_item);
-        //Set background color form Settings
-        clAddProductItem= findViewById(R.id.clAddProductItem);
-        btnAddProductItemSave=findViewById(R.id.btnAddProductItemSave);
-        btnAddProductItemCancel=findViewById(R.id.btnAddProductItemCancel);
-        btnAddProductItemDelete=findViewById(R.id.btnAddProductItemDelete);
-        tvAddProductItemProductId=findViewById(R.id.tvAddProductItemProductId);
-        etAddProductItemProdName=findViewById(R.id.etAddProductItemProdName);
+        setContentView(R.layout.activity_add_reward);
+        btnAddRewardSave=findViewById(R.id.btnAddRewardSave);
+        btnAddRewardCancel=findViewById(R.id.btnAddRewardCancel);
+        btnAddRewardDelete=findViewById(R.id.btnAddRewardDelete);
+        tvAddRewardId=findViewById(R.id.tvAddRewardId);
+        etAddRwdDesc=findViewById(R.id.etAddRewardRwdDesc);
+        etAddRwdName=findViewById(R.id.etAddRewardRwdName);
         dataSource = new DataSource(this);
+
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
         if (mode.equals("update")) {
-            btnAddProductItemDelete.setEnabled(true);
-            product = (Product) intent.getSerializableExtra("ProductItem");
-            tvAddProductItemProductId.setText(product.getProductId()+"");
-            etAddProductItemProdName.setText(product.getProdName());
-
+            btnAddRewardDelete.setEnabled(true);
+            reward = (Reward) intent.getSerializableExtra("Reward");
+            etAddRwdName.setText(reward.getRwdName()+"");
+            tvAddRewardId.setText(reward.getRewardId()+"");
+            etAddRwdDesc.setText(reward.getRwdDesc()+"");
         }
         else
         {
-            btnAddProductItemDelete.setEnabled(false);
-            product=new Product();
-            tvAddProductItemProductId.setText("*");
-            etAddProductItemProdName.setText("");
-
-
+            btnAddRewardDelete.setEnabled(false);
+            reward=new Reward();
+            etAddRwdName.setText("");
+            tvAddRewardId.setText("*");
+            etAddRwdDesc.setText("");
         }
-
-
-        btnAddProductItemCancel.setOnClickListener(new View.OnClickListener() {
+        btnAddRewardCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RewardActivity.class);
                 startActivity(intent);
 
             }
         });
 
-        btnAddProductItemSave.setOnClickListener(new View.OnClickListener() {
+        btnAddRewardSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                reward.setRwdName(etAddRwdName.getText() + "");
+                reward.setRwdDesc(etAddRwdDesc.getText() + "");
                 if (mode.equals("update"))
                 {
-                    product.setProdName(etAddProductItemProdName.getText()+"");
-                    if(dataSource.updateProductItem(product))
-                    {
-                        Toast.makeText(getApplicationContext(), " Product Item Updated!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                    if (dataSource.updateReward(reward)) {
+                        Toast.makeText(getApplicationContext(), " Reward Updated!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(),RewardActivity.class);
                         startActivity(intent);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), " Product Item Update Failed!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), " Reward Ypdate Failed!", Toast.LENGTH_LONG).show();
                     }
 
                 }
                 else
                 {
-                    product.setProdName(etAddProductItemProdName.getText()+"");
-                    if(dataSource.insertProductItem(product))
-                    {
-                        Toast.makeText(getApplicationContext(), " Product Item Inserted!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                    if (dataSource.insertReward(reward)) {
+                        Toast.makeText(getApplicationContext(), " Reward Inserted!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(),RewardActivity.class);
                         startActivity(intent);
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), " Product Item Insertion Failed!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), " Reward Insertion Failed!", Toast.LENGTH_LONG).show();
                     }
                 }
+
+
 
             }
         });
 
-        btnAddProductItemDelete.setOnClickListener(new View.OnClickListener() {
+        btnAddRewardDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataSource.deleteProductItem(product);
-                Intent intent = new Intent(getApplicationContext(), ProductItemActivity.class);
+                dataSource.deleteReward(reward);
+                Toast.makeText(getApplicationContext(), " Reward Deleted!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), RewardActivity.class);
                 startActivity(intent);
             }
         });
@@ -120,6 +116,8 @@ public class AddProductItemActivity extends AppCompatActivity {
 
 
 
+        //Set background color form Settings
+        clAddReward= findViewById(R.id.clAddReward);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
@@ -127,13 +125,13 @@ public class AddProductItemActivity extends AppCompatActivity {
 
         switch (basicColor){
             case "White":
-                clAddProductItem.setBackgroundColor(Color.WHITE);
+                clAddReward.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clAddProductItem.setBackgroundColor(Color.BLUE);
+                clAddReward.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clAddProductItem.setBackgroundColor(Color.GREEN);
+                clAddReward.setBackgroundColor(Color.GREEN);
                 break;
 
         }
@@ -191,19 +189,19 @@ public class AddProductItemActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clAddProductItem= findViewById(R.id.clAddProductItem);
+        clAddReward= findViewById(R.id.clAddReward);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clAddProductItem.setBackgroundColor(Color.WHITE);
+                clAddReward.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clAddProductItem.setBackgroundColor(Color.BLUE);
+                clAddReward.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clAddProductItem.setBackgroundColor(Color.GREEN);
+                clAddReward.setBackgroundColor(Color.GREEN);
                 break;
         }
     }

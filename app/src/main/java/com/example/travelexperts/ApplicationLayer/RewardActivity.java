@@ -1,8 +1,3 @@
-//Author: Gustavo Lourenco Moises
-//Thread Project - Group 1
-//OOSD Program Spring 2020
-//Date:9/30/2020
-//Travel Agency Application
 package com.example.travelexperts.ApplicationLayer;
 
 import androidx.annotation.NonNull;
@@ -17,89 +12,80 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.Reward;
+import com.example.travelexperts.BusinessLayer.Supplier;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
-public class SettingsActivity extends AppCompatActivity {
-    //Local Variables
-    Button btnSaveSettings;
-    RadioGroup rgBackColor;
-    RadioButton rbBackColor1;
-    RadioButton rbBackColor2;
-    RadioButton rbBackColor3;
+
+import java.util.ArrayList;
+
+public class RewardActivity extends AppCompatActivity {
     SharedPreferences prefs;
-    ConstraintLayout clSettings;
-
-    private String colorPicked;
-    public String getColorPicked() {
-        return colorPicked;
-    }
-
-    public void setColorPicked(String colorPicked) {
-        this.colorPicked = colorPicked;
-    }
-
+    ConstraintLayout clRewards;
+    ListView lvListRewards;
+    DataSource dataSource;
+    ArrayList<Reward> rewards;
+    ArrayAdapter<Reward> adapterReward;
+    Button btnAddReward;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        btnSaveSettings= findViewById(R.id.btnSaveSettings);
-        rgBackColor= findViewById(R.id.rgBackGroundColor);
-        rbBackColor1= findViewById(R.id.rbBackColor1);
-        rbBackColor2= findViewById(R.id.rbBackColor2);
-        rbBackColor3= findViewById(R.id.rbBackColor3);
-
+        setContentView(R.layout.activity_rewards);
         //Set background color form Settings
-        clSettings= findViewById(R.id.clSettings);
+        clRewards= findViewById(R.id.clRewards);
+        btnAddReward=findViewById(R.id.btnAddRewards);
+        lvListRewards=findViewById(R.id.lvListRewards);
+        //Get Fees from database
+        dataSource = new DataSource(this);
+        rewards=dataSource.getRewards();
+        adapterReward=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,rewards);
+        lvListRewards.setAdapter(adapterReward);
+
+        btnAddReward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddRewardActivity.class);
+                intent.putExtra("mode","insert");
+                startActivity(intent);
+            }
+        });
+
+        lvListRewards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), AddRewardActivity.class);
+                intent.putExtra("mode","update");
+                intent.putExtra("Reward",rewards.get(position));
+                startActivity(intent);
+            }
+        });
+
+
+
+
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+
+
         switch (basicColor){
             case "White":
-                clSettings.setBackgroundColor(Color.WHITE);
+                clRewards.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clSettings.setBackgroundColor(Color.BLUE);
+                clRewards.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clSettings.setBackgroundColor(Color.GREEN);
+                clRewards.setBackgroundColor(Color.GREEN);
                 break;
 
         }
-        //Select Background color
-        rgBackColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()            {
-            @Override
-            public void onCheckedChanged(RadioGroup arg0, int selectedId) {
-                selectedId= rgBackColor.getCheckedRadioButtonId();
-                RadioButton rbBackColor = (RadioButton) findViewById(selectedId);
-                setColorPicked(rbBackColor.getText().toString());
-            }
-        });
-
-        //Save the color in the shared preferences in the device
-        btnSaveSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("color",getColorPicked());
-                editor.commit();
-                switch (getColorPicked()){
-                    case "White":
-                        clSettings.setBackgroundColor(Color.WHITE);
-                        break;
-                    case "Blue":
-                        clSettings.setBackgroundColor(Color.BLUE);
-                        break;
-                    case "Green":
-                        clSettings.setBackgroundColor(Color.GREEN);
-                        break;
-                }
-                Toast.makeText(getApplicationContext(), "Prefs were saved",Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     //Load Application Menu
@@ -154,19 +140,19 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Set background color form Settings
-        clSettings= findViewById(R.id.clSettings);
+        clRewards= findViewById(R.id.clRewards);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
         switch (basicColor){
             case "White":
-                clSettings.setBackgroundColor(Color.WHITE);
+                clRewards.setBackgroundColor(Color.WHITE);
                 break;
             case "Blue":
-                clSettings.setBackgroundColor(Color.BLUE);
+                clRewards.setBackgroundColor(Color.BLUE);
                 break;
             case "Green":
-                clSettings.setBackgroundColor(Color.GREEN);
+                clRewards.setBackgroundColor(Color.GREEN);
                 break;
         }
     }

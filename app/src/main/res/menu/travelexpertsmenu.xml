@@ -12,7 +12,7 @@
         android:title="Product" />
     <item
         android:id="@+id/miMiscelaneous"
-        android:title="Miscelaneous" />
+        android:title="Miscellaneous" />
     <item
         android:id="@+id/miSettings"
         android:title="Settings" />
