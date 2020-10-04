@@ -16,17 +16,64 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.travelexperts.BusinessLayer.ProdPackage;
+import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 public class PackageActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clPackage;
+    ArrayAdapter<ProdPackage> adapter;
+    DataSource dataSource;
+    ListView lvPackageList;
+    Button btnAddPackage;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package);
+
+        lvPackageList = findViewById(R.id.lvPackageList);
+        btnAddPackage = findViewById(R.id.btnAddPackage);
+
+        // generation of adapter that stores data displayed in the list view along with layout
+        adapter = new ArrayAdapter<ProdPackage>(getApplicationContext(), android.R.layout.simple_list_item_1);
+        // retrieving packages from data base
+        dataSource = new DataSource(this.getApplicationContext());
+        adapter.addAll(dataSource.getPackages());
+
+        // binding of adapter to list view
+        lvPackageList.setAdapter(adapter);
+
+        btnAddPackage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        lvPackageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // intent to initialize another activity
+                Intent intent = new Intent(getApplicationContext(), PackageDetailsActivity.class);
+                // determine selected agent
+                ProdPackage prodPackage = adapter.getItem(position);
+                // make it available for new activity
+                intent.putExtra("package", prodPackage);
+                // launch it
+                startActivity(intent);
+            }
+        });
+
         //Set background color form Settings
         clPackage= findViewById(R.id.clPackage);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
@@ -45,6 +92,7 @@ public class PackageActivity extends AppCompatActivity {
 
         }
     }
+
 
     //Load Application Menu
     @Override
