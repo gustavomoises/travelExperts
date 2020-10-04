@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.travelexperts">
 
     <application
@@ -8,21 +9,34 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationLayer.AddBookDetailsActivity"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup">
+        <activity android:name=".ApplicationLayer.AboutActivity" />
+        <activity android:name=".ApplicationLayer.AddAffiliationActivity"/>
+        <activity android:name=".ApplicationLayer.AddBookDetailsActivity"/>
         <activity android:name=".ApplicationLayer.AddBookingActivity" />
+        <activity android:name=".ApplicationLayer.AddClassActivity"/>
+        <activity android:name=".ApplicationLayer.AddFeeActivity"/>
+        <activity android:name=".ApplicationLayer.AddProductActivity" />
+        <activity android:name=".ApplicationLayer.AddProductItemActivity"/>
+        <activity android:name=".ApplicationLayer.AddRegionActivity"/>
+        <activity android:name=".ApplicationLayer.AddRewardActivity"/>
+        <activity android:name=".ApplicationLayer.AddSupplierActivity"/>
+        <activity android:name=".ApplicationLayer.AddTripTypeActivity"/>
+        <activity android:name=".ApplicationLayer.AffiliationActivity"/>
+        <activity android:name=".ApplicationLayer.BookingActivity" />
         <activity android:name=".ApplicationLayer.BookingDetailsActivity" />
-        <activity android:name=".ApplicationLayer.RegionActivity" />
-        <activity android:name=".ApplicationLayer.TripActivity" />
         <activity android:name=".ApplicationLayer.ClassActivity" />
         <activity android:name=".ApplicationLayer.FeeActivity" />
-        <activity android:name=".ApplicationLayer.SettingsActivity" />
-        <activity android:name=".ApplicationLayer.AboutActivity" />
-        <activity android:name=".ApplicationLayer.MiscelaneousActivity" />
-        <activity android:name=".ApplicationLayer.ProductActivity" />
+        <activity android:name=".ApplicationLayer.MiscellaneousActivity" />
         <activity android:name=".ApplicationLayer.PackageActivity" />
-        <activity android:name=".ApplicationLayer.BookingActivity" />
-        <activity android:name=".ApplicationLayer.AddProductActivity" />
+        <activity android:name=".ApplicationLayer.ProductActivity" />
+        <activity android:name=".ApplicationLayer.ProductItemActivity"/>
+        <activity android:name=".ApplicationLayer.RegionActivity" />
+        <activity android:name=".ApplicationLayer.RewardActivity"/>
+        <activity android:name=".ApplicationLayer.SettingsActivity" />
+        <activity android:name=".ApplicationLayer.SupplierActivity"/>
+        <activity android:name=".ApplicationLayer.TripTypeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
