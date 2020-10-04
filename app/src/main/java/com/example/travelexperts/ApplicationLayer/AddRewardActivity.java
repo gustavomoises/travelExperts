@@ -51,12 +51,16 @@ public class AddRewardActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
+
+        assert mode != null;
         if (mode.equals("update")) {
             btnAddRewardDelete.setEnabled(true);
             reward = (Reward) intent.getSerializableExtra("Reward");
-            etAddRwdName.setText(reward.getRwdName()+"");
-            tvAddRewardId.setText(reward.getRewardId()+"");
-            etAddRwdDesc.setText(reward.getRwdDesc()+"");
+
+            assert reward != null;
+            etAddRwdName.setText(reward.getRwdName()==null?"":String.format("%s", reward.getRwdName()));
+            tvAddRewardId.setText(String.format("%s", reward.getRewardId()));
+            etAddRwdDesc.setText(reward.getRwdDesc()==null?"":String.format("%s", reward.getRwdDesc()));
         }
         else
         {
@@ -198,6 +202,7 @@ public class AddRewardActivity extends AppCompatActivity {
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+        assert basicColor != null;
         switch (basicColor){
             case "White":
                 clAddReward.setBackgroundColor(Color.WHITE);

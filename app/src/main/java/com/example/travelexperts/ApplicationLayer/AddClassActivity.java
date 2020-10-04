@@ -50,12 +50,14 @@ public class AddClassActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
+        assert mode != null;
         if (mode.equals("update")) {
             btnAddClassDelete.setEnabled(true);
             bookClass = (BookClass) intent.getSerializableExtra("Class");
-            etAddClassClassName.setText(bookClass.getClassName()+"");
-            etAddClassClassId.setText(bookClass.getClassId()+"");
-            etAddCLassClassDesc.setText(bookClass.getClassDes()+"");
+            assert bookClass != null;
+            etAddClassClassName.setText(bookClass.getClassName()==null?"":String.format("%s", bookClass.getClassName()));
+            etAddClassClassId.setText(String.format("%s", bookClass.getClassId()));
+            etAddCLassClassDesc.setText(bookClass.getClassDes()==null?"":String.format("%s", bookClass.getClassDes()));
         }
         else
         {
@@ -216,6 +218,7 @@ public class AddClassActivity extends AppCompatActivity {
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+        assert basicColor != null;
         switch (basicColor){
             case "White":
                 clAddClass.setBackgroundColor(Color.WHITE);

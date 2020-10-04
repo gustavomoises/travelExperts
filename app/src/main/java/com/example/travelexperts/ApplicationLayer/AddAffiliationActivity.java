@@ -59,9 +59,9 @@ public class AddAffiliationActivity extends AppCompatActivity {
             affiliation = (Affiliation) intent.getSerializableExtra("Affiliation");
 
             assert affiliation != null;
-            etAddAffiliationAffName.setText(String.format("%s", affiliation.getAffName()));
+            etAddAffiliationAffName.setText(affiliation.getAffName()==null?"":String.format("%s", affiliation.getAffName()));
             etAddAffiliationAffiliationId.setText(String.format("%s", affiliation.getAffiliationId()));
-            etAddAffiliationAffDesc.setText(String.format("%s", affiliation.getAffDesc()));
+            etAddAffiliationAffDesc.setText(String.format(affiliation.getAffDesc()==null?"":"%s", affiliation.getAffDesc()));
         }
         else
         {
