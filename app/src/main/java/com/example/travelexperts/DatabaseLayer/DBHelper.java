@@ -17,6 +17,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.Supplier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,13 @@ public class DBHelper extends SQLiteOpenHelper {
     //Table columns
     private static  final String PRODUCT_ID = "ProductId";
     private static  final String PRODUCT_NAME = "ProdName";
+
+    //Variable and Constants for Suppliers Table //By Suvanjan Shrestha
+    //Table names
+    private static  final String TABLE_SUPPLIERS = "suppliers";
+    //Table columns
+    private static  final String SUPPLIER_ID = "SupplierId";
+    private static  final String SUPNAME = "SupName";
 
     private static DBHelper mDbHelper;
 
@@ -161,6 +169,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+
     //Delete single row from Products   //By Suvanjan Shrestha
     void deleteProduct(String name) {
         SQLiteDatabase db = getWritableDatabase();
@@ -177,13 +186,31 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    /*//Create Cursor to read data    //By Suvanjan Shrestha
-    public Cursor readProductData()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String qry = "select * from products";
-        Cursor cursor = db.rawQuery(qry, null);
-        return cursor;
-    }*/
+    public List<Supplier> getAllSuppliers(){
+        List<Supplier> supplierList = new ArrayList<>();
 
+        String QUERY = "SELECT * FROM Suppliers";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Supplier supplier = new Supplier();
+                    supplier.SupName = cursor.getString(cursor.getColumnIndex(SUPNAME));
+                    supplier.SupplierId = cursor.getInt(cursor.getColumnIndex(SUPPLIER_ID));
+                    supplierList.add(supplier);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to get data from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return supplierList;
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -12,10 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.Supplier;
 import com.example.travelexperts.DatabaseLayer.DBHelper;
 import com.example.travelexperts.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
+/*
+ * Author: Suvanjan Shrestha
+ * Date: 02/10/2020
+ * TravelExperts Android App
+ */
 public class AddProductActivity extends AppCompatActivity{
 
     private EditText etProductName;
@@ -37,8 +46,11 @@ public class AddProductActivity extends AppCompatActivity{
 
 
         etProductName = findViewById(R.id.etProductName);
-        selectSupplier = findViewById(R.id.spinnerSelectSupplier);
         btnSaveProduct = findViewById(R.id.btnSaveProduct);
+
+        selectSupplier = findViewById(R.id.spinnerSelectSupplier);
+        //selectSupplier.setOnItemClickListener(this);
+        loadSupplierData();
 
         btnSaveProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,5 +78,22 @@ public class AddProductActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         onBackPressed();
         return true;
+    }
+
+    //populate the spinner
+    public void loadSupplierData(){
+        dbHelper = new DBHelper(getApplicationContext());
+
+        // Spinner Drop down elements
+        List<Supplier> supplierList = dbHelper.getAllSuppliers();
+
+        // Creating adapter for spinner
+        ArrayAdapter<Supplier> supplierArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, supplierList);
+
+        // Drop down layout
+        supplierArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        selectSupplier.setAdapter(supplierArrayAdapter);
     }
 }
