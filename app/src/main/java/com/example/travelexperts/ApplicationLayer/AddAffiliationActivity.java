@@ -8,7 +8,6 @@ package com.example.travelexperts.ApplicationLayer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,14 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.travelexperts.BusinessLayer.Affiliation;
-import com.example.travelexperts.BusinessLayer.BookClass;
-import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 public class AddAffiliationActivity extends AppCompatActivity {
+    //local Variables
     SharedPreferences prefs;
     ConstraintLayout clAddAffiliation;
     Button btnAddAffiliationCancel,btnAddAffiliationSave, btnAddAffiliationDelete;
@@ -35,11 +32,13 @@ public class AddAffiliationActivity extends AppCompatActivity {
     String mode;
     Affiliation affiliation;
     EditText etAddAffiliationAffiliationId, etAddAffiliationAffName,etAddAffiliationAffDesc;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_affiliation);
-        //Set background color form Settings
+       //Id Association
         clAddAffiliation= findViewById(R.id.clAddAffiliation);
         btnAddAffiliationSave=findViewById(R.id.btnAddAffiliationSave);
         btnAddAffiliationCancel=findViewById(R.id.btnAddAffiliationCancel);
@@ -49,14 +48,20 @@ public class AddAffiliationActivity extends AppCompatActivity {
         etAddAffiliationAffDesc=findViewById(R.id.etAddAffiliationAffDesc);
         dataSource = new DataSource(this);
 
+        //Get mode from intent
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
+
+        assert mode != null;
+        //Verify mode
         if (mode.equals("update")) {
             btnAddAffiliationDelete.setEnabled(true);
             affiliation = (Affiliation) intent.getSerializableExtra("Affiliation");
-            etAddAffiliationAffName.setText(affiliation.getAffName()+"");
-            etAddAffiliationAffiliationId.setText(affiliation.getAffiliationId()+"");
-            etAddAffiliationAffDesc.setText(affiliation.getAffDesc()+"");
+
+            assert affiliation != null;
+            etAddAffiliationAffName.setText(affiliation.getAffName()==null?"":String.format("%s", affiliation.getAffName()));
+            etAddAffiliationAffiliationId.setText(String.format("%s", affiliation.getAffiliationId()));
+            etAddAffiliationAffDesc.setText(String.format(affiliation.getAffDesc()==null?"":"%s", affiliation.getAffDesc()));
         }
         else
         {
@@ -66,26 +71,30 @@ public class AddAffiliationActivity extends AppCompatActivity {
             etAddAffiliationAffiliationId.setText("");
             etAddAffiliationAffDesc.setText("");
         }
+
+        //Cancel Button
         btnAddAffiliationCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AffiliationActivity.class);
                 startActivity(intent);
-
             }
         });
 
+        //Add Button
         btnAddAffiliationSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Affiliation Id validation
                 String typeId=etAddAffiliationAffiliationId.getText()+"";
                 if (typeId.length()==0)
                     Toast.makeText(getApplicationContext(), " Affiliation Id is required.", Toast.LENGTH_LONG).show();
                 else
                 {
                     if (typeId.length()>10)
-                        Toast.makeText(getApplicationContext(), " Maximum of 10 characters is required for the Affiliation Id", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), " Affiliation Id cannot have more than 10 characters.", Toast.LENGTH_LONG).show();
                     else {
+                        //Verify if Affiliation Id is already in use by another Affiliation
                         boolean exist = false;
                         int k=0;
                         for (Affiliation r : dataSource.getAffiliations()) {
@@ -99,10 +108,9 @@ public class AddAffiliationActivity extends AppCompatActivity {
                                 if (r.getAffiliationId().equals(typeId))
                                     exist = true;
                             }
-
                         }
                         if (exist)
-                            Toast.makeText(getApplicationContext(), " Id associated to another affiliation. Please, choose another Id!!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), " The selected Id is associated to another affiliation. Please, choose another one!!!", Toast.LENGTH_LONG).show();
                         else {
                             if (mode.equals("update")) {
                                 affiliation.setAffName(etAddAffiliationAffName.getText() + "");
@@ -115,7 +123,6 @@ public class AddAffiliationActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), " Affiliation Update Failed!", Toast.LENGTH_LONG).show();
                                 }
-
                             } else {
                                 affiliation.setAffName(etAddAffiliationAffName.getText() + "");
                                 affiliation.setAffiliationId(typeId);
@@ -128,13 +135,13 @@ public class AddAffiliationActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), " Affiliation Insertion Failed!", Toast.LENGTH_LONG).show();
                                 }
                             }
-
                         }
                     }
                 }
             }
         });
 
+        //Delete Button
         btnAddAffiliationDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,18 +151,9 @@ public class AddAffiliationActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
+        //Set background color from Settings
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
-
-
-
         switch (basicColor){
             case "White":
                 clAddAffiliation.setBackgroundColor(Color.WHITE);
@@ -166,7 +164,6 @@ public class AddAffiliationActivity extends AppCompatActivity {
             case "Green":
                 clAddAffiliation.setBackgroundColor(Color.GREEN);
                 break;
-
         }
     }
 
@@ -221,11 +218,12 @@ public class AddAffiliationActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //Set background color form Settings
+        //Set background color from Settings
         clAddAffiliation= findViewById(R.id.clAddAffiliation);
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
 
+        assert basicColor != null;
         switch (basicColor){
             case "White":
                 clAddAffiliation.setBackgroundColor(Color.WHITE);
@@ -238,5 +236,4 @@ public class AddAffiliationActivity extends AppCompatActivity {
                 break;
         }
     }
-
 }
