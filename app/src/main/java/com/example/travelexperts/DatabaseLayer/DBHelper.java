@@ -15,8 +15,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelexperts.BusinessLayer.Product;
+import com.example.travelexperts.BusinessLayer.RecyclerViewData;
 import com.example.travelexperts.BusinessLayer.Supplier;
 
 import java.util.ArrayList;
@@ -29,19 +31,19 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String name= "TravelExpertsSqlLite.db";
 
 
-    //Variable and Constants for Products Table //By Suvanjan Shrestha
+    //Variable and Constants for Recyclerview data //By Suvanjan Shrestha
     //Table names
     private static  final String TABLE_PRODUCTS = "products";
+    private static  final String TABLE_SUPPLIERS = "suppliers";
+    private static  final String TABLE_PRODUCTS_SUPPLIERS = "products_suppliers";
     //Table columns
     private static  final String PRODUCT_ID = "ProductId";
     private static  final String PRODUCT_NAME = "ProdName";
-
-    //Variable and Constants for Suppliers Table //By Suvanjan Shrestha
-    //Table names
-    private static  final String TABLE_SUPPLIERS = "suppliers";
-    //Table columns
     private static  final String SUPPLIER_ID = "SupplierId";
     private static  final String SUPNAME = "SupName";
+    private static  final String PRODUCT_SUPPLIER_ID = "ProductSupplierId";
+
+
 
     private static DBHelper mDbHelper;
 
@@ -141,9 +143,15 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //function to view Products    //By Suvanjan Shrestha
-    public List<Product> getAllProducts(){
-        List<Product> productList = new ArrayList<>();
-        String QUERY = "SELECT * FROM Products";
+    public List<RecyclerViewData> getAllProducts(){
+        List<RecyclerViewData> dataList = new ArrayList<>();
+        String QUERY = "SELECT ps.ProductSupplierId, ps.ProductId, ps.SupplierId, p.ProdName, s.SupName\n" +
+                "FROM Products p\n" +
+                "INNER JOIN Products_Suppliers ps\n" +
+                "ON p.ProductId = ps.ProductId\n" +
+                "INNER JOIN Suppliers s\n" +
+                "ON ps.SupplierId = s.SupplierId\n" +
+                "Order By ps.ProductSupplierId";
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY, null);
@@ -151,10 +159,13 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Product product = new Product();
-                    product.ProdName = cursor.getString(cursor.getColumnIndex(PRODUCT_NAME));
-                    product.ProductId = cursor.getInt(cursor.getColumnIndex(PRODUCT_ID));
-                    productList.add(product);
+                    RecyclerViewData viewData = new RecyclerViewData();
+                    viewData.ProdName = cursor.getString(cursor.getColumnIndex(PRODUCT_NAME));
+                    viewData.ProductId = cursor.getInt(cursor.getColumnIndex(PRODUCT_ID));
+                    viewData.ProductSupplierId = cursor.getInt(cursor.getColumnIndex(PRODUCT_SUPPLIER_ID));
+                    viewData.SupName = cursor.getString(cursor.getColumnIndex(SUPNAME));
+                    viewData.SupplierId = cursor.getInt(cursor.getColumnIndex(SUPPLIER_ID));
+                    dataList.add(viewData);
 
                 } while (cursor.moveToNext());
             }
@@ -165,7 +176,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-        return productList;
+        return dataList;
     }
 
 

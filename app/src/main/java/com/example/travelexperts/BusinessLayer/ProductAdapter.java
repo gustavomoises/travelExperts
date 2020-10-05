@@ -28,14 +28,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private Context context;
     private Cursor cursor;
-    List<Product> productList = new ArrayList<>();
+    List<RecyclerViewData> recyclerViewDataList = new ArrayList<>();
     LayoutInflater inflater;
     Listener listener;
 
 
-    public ProductAdapter(Context context, List<Product> productList1){
+    public ProductAdapter(Context context, List<RecyclerViewData> productList1){
         this.context = context;
-        this.productList = productList1;
+        this.recyclerViewDataList = productList1;
         this.listener = (Listener) context;
         inflater = LayoutInflater.from(context);
     }
@@ -67,8 +67,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     //Populate the list
     @Override
     public void onBindViewHolder(@NonNull final ProductViewHolder holder, int position) {
-        holder.tvProductName.setText(productList.get(position).ProdName);
-        holder.tvSupplierName.setText(productList.get(position).ProductId+"");
+        holder.tvProductName.setText(recyclerViewDataList.get(position).ProdName);
+        holder.tvSupplierName.setText(recyclerViewDataList.get(position).SupName);
 
         holder.btnEditProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +82,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return recyclerViewDataList.size();
     }
 
 

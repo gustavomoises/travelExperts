@@ -6,10 +6,12 @@
 
 package com.example.travelexperts.BusinessLayer;
 
-public class ProductSupplier {
-    private int ProductSupplierId;
-    private int ProductId;
-    private int SupplierId;
+import java.io.Serializable;
+
+public class ProductSupplier implements Serializable {
+    public int ProductSupplierId;
+    public int ProductId;
+    public int SupplierId;
 
     //Constructor no arguments
     public ProductSupplier() {
