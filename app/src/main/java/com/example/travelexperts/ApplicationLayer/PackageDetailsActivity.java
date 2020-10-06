@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.travelexperts.BusinessLayer.ProdPackage;
@@ -17,6 +19,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
 
     EditText etPackageId, etCommission, etBasePrice, etDescription, etEndDate, etName, etStartDate;
     SharedPreferences prefs;
+    Button btnConfirm;
     ConstraintLayout clPackage;
 
 
@@ -29,6 +32,8 @@ public class PackageDetailsActivity extends AppCompatActivity {
 
         // receives agent from sending activity
         ProdPackage prodPackage = (ProdPackage) receive.getSerializableExtra("package");
+        // receives mode from sending activity
+        String mode = (String) receive.getStringExtra("mode");
         // reference for texts
         etPackageId = findViewById(R.id.etPackageId);
         etCommission = findViewById(R.id.etCommission);
@@ -37,6 +42,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
         etEndDate = findViewById(R.id.etEndDate);
         etName = findViewById(R.id.etName);
         etStartDate = findViewById(R.id.etStartDate);
+        btnConfirm = findViewById(R.id.btnConfirm);
 
         //Set background color form Settings
         clPackage= findViewById(R.id.clPackage);
@@ -55,13 +61,18 @@ public class PackageDetailsActivity extends AppCompatActivity {
                 break;
         }
 
-        etPackageId.setText(prodPackage.getPackageId() + "");
-        etCommission.setText(prodPackage.getPkgAgencyCommission() + "");
-        etBasePrice.setText(prodPackage.getPkgBasePrice() + "");
-        etDescription.setText(prodPackage.getPkgDec());
-        etEndDate.setText(prodPackage.getPkgEndDate() + "");
-        etName.setText(prodPackage.getPkgName());
-        etStartDate.setText(prodPackage.getPkgStartDate() + "");
+        if (mode.equals("edit")) {
+            etPackageId.setText(prodPackage.getPackageId() + "");
+            etCommission.setText(prodPackage.getPkgAgencyCommission() + "");
+            etBasePrice.setText(prodPackage.getPkgBasePrice() + "");
+            etDescription.setText(prodPackage.getPkgDec());
+            etEndDate.setText(prodPackage.getPkgEndDate() + "");
+            etName.setText(prodPackage.getPkgName());
+            etStartDate.setText(prodPackage.getPkgStartDate() + "");
+            btnConfirm.setVisibility(View.INVISIBLE);
+        }
+        else
+            btnConfirm.setVisibility(View.VISIBLE);
 
     }
 

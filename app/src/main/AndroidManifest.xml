@@ -21,6 +21,7 @@
         <activity android:name=".ApplicationLayer.MiscelaneousActivity" />
         <activity android:name=".ApplicationLayer.ProductActivity" />
         <activity android:name=".ApplicationLayer.PackageActivity" />
+        <activity android:name=".ApplicationLayer.PackageDetailsActivity" />
         <activity android:name=".ApplicationLayer.BookingActivity" />
         <activity android:name=".ApplicationLayer.AddProductActivity" />
         <activity android:name=".MainActivity">

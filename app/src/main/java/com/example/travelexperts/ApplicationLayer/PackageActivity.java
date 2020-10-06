@@ -56,6 +56,12 @@ public class PackageActivity extends AppCompatActivity {
         btnAddPackage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // intent to initialize another activity
+                Intent intent = new Intent(getApplicationContext(), PackageDetailsActivity.class);
+                // set mode for new activity
+                intent.putExtra("mode", "add");
+                // launch it
+                startActivity(intent);
 
             }
         });
@@ -69,6 +75,8 @@ public class PackageActivity extends AppCompatActivity {
                 ProdPackage prodPackage = adapter.getItem(position);
                 // make it available for new activity
                 intent.putExtra("package", prodPackage);
+                // set mode for new activity
+                intent.putExtra("mode", "edit");
                 // launch it
                 startActivity(intent);
             }
