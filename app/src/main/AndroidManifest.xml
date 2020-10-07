@@ -13,12 +13,12 @@
         <activity android:name=".ApplicationLayer.AddBookingActivity" />
         <activity android:name=".ApplicationLayer.BookingDetailsActivity" />
         <activity android:name=".ApplicationLayer.RegionActivity" />
-        <activity android:name=".ApplicationLayer.TripActivity" />
+        <activity android:name=".ApplicationLayer.TripTypeActivity" />
         <activity android:name=".ApplicationLayer.ClassActivity" />
         <activity android:name=".ApplicationLayer.FeeActivity" />
         <activity android:name=".ApplicationLayer.SettingsActivity" />
         <activity android:name=".ApplicationLayer.AboutActivity" />
-        <activity android:name=".ApplicationLayer.MiscelaneousActivity" />
+        <activity android:name=".ApplicationLayer.MiscellaneousActivity" />
         <activity android:name=".ApplicationLayer.ProductActivity" />
         <activity android:name=".ApplicationLayer.PackageActivity" />
         <activity android:name=".ApplicationLayer.PackageDetailsActivity" />
