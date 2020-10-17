@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,35 +24,48 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
+
 public class PackageActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clPackage;
-    ArrayAdapter<ProdPackage> adapter;
-    DataSource dataSource;
     ListView lvPackageList;
     Button btnAddPackage;
+    RequestQueue requestQueue;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package);
+        requestQueue = Volley.newRequestQueue(this);
 
         lvPackageList = findViewById(R.id.lvPackageList);
         btnAddPackage = findViewById(R.id.btnAddPackage);
 
-        // generation of adapter that stores data displayed in the list view along with layout
-        adapter = new ArrayAdapter<ProdPackage>(getApplicationContext(), android.R.layout.simple_list_item_1);
-        // retrieving packages from data base
-        dataSource = new DataSource(this.getApplicationContext());
-        adapter.addAll(dataSource.getPackages());
+        Executors.newSingleThreadExecutor().execute(new PackageActivity.GetPackages());
 
-        // binding of adapter to list view
-        lvPackageList.setAdapter(adapter);
 
         btnAddPackage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,10 +83,9 @@ public class PackageActivity extends AppCompatActivity {
         lvPackageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProdPackage prodPackage= (ProdPackage) lvPackageList.getAdapter().getItem(position);
                 // intent to initialize another activity
                 Intent intent = new Intent(getApplicationContext(), PackageDetailsActivity.class);
-                // determine selected agent
-                ProdPackage prodPackage = adapter.getItem(position);
                 // make it available for new activity
                 intent.putExtra("package", prodPackage);
                 // set mode for new activity
@@ -168,6 +181,78 @@ public class PackageActivity extends AppCompatActivity {
             case "Green":
                 clPackage.setBackgroundColor(Color.GREEN);
                 break;
+        }
+    }
+    class GetPackages implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/package/getpackages";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<ProdPackage> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date dateStart =new Date();
+                            try {
+                                dateStart = dateFormat.parse(agt.getString("PkgStartDate"));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Date dateEnd =new Date();
+                            try {
+                                dateStart = dateFormat.parse(agt.getString("PkgEndDate"));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            double pkgPrice;
+                            try{
+                                pkgPrice=  Double.parseDouble(agt.getString("PkgBasePrice"));
+                            }catch (Exception e) {
+                                pkgPrice=0;
+                            }
+                            double pkgAgency;
+                            try{
+                                pkgAgency=  Double.parseDouble(agt.getString("PkgAgencyCommission"));
+                            }catch (Exception e) {
+                                pkgAgency=0;
+                            }
+
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart, dateEnd, agt.getString("PkgDesc"), pkgPrice, pkgAgency);
+                            adapter.add(prodPackage);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<ProdPackage> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvPackageList.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
         }
     }
 }

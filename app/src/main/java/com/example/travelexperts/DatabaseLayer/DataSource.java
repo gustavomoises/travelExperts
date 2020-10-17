@@ -57,17 +57,20 @@ public class DataSource {
     //AFFILIATION -----------------------------------------------------------------------------------------------
 
     //Update Affiliation in the database
-    public boolean updateAffiliation(Affiliation affiliation){
+    // http://localhost:8080/JSPDay3RESTExample/rs/affiliation/updateaffiliation/{oldAffiliationId}
+    //INSERT THE OLD Primary KEY to Be Updated
+    public boolean updateAffiliation(Affiliation affiliation, String oldAffiliationId){
         ContentValues cv = new ContentValues();
         cv.put("AffilitationId",affiliation.getAffiliationId()+"");
         cv.put("AffName", affiliation.getAffName());
         cv.put("AffDesc", affiliation.getAffDesc());
-        String [] args = {affiliation.getAffiliationId()+""};
+        String [] args = {oldAffiliationId+""};
         String where = "AffilitationId=?";
         return db.update("Affiliations", cv, where, args) != -1;
     }
 
     //Insert Affiliation in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/affiliation/putaffiliation
     public boolean insertAffiliation(Affiliation affiliation)
     {
         ContentValues cv = new ContentValues();
@@ -76,7 +79,9 @@ public class DataSource {
         cv.put("AffDesc", affiliation.getAffDesc());
         return db.insert("Affiliations", null, cv) != -1;
     }
+
     //Delete Affiliation from Database
+    //http://localhost:8080/JSPDay3RESTExample/rs/affiliation/deleteaffiliation/{AffiliationId}
     public boolean deleteAffiliation(Affiliation affiliation){
         String [] args = {affiliation.getAffiliationId()+""};
         String where = "AffilitationId=?";
@@ -84,6 +89,7 @@ public class DataSource {
     }
 
     //Get all Affiliations from the database
+    //http://localhost:8080/JSPDay3RESTExample/rs/affiliation/getaffiliations
     public ArrayList<Affiliation> getAffiliations()
     {
         ArrayList<Affiliation> affiliations = new ArrayList<>();
@@ -99,6 +105,7 @@ public class DataSource {
     }
     //AGENCY-----------------------------------------------------------------------------------------------------------------
     //Get all the agencies from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/agency/getagencies
     public ArrayList<Agency> getAllAgencies()
     {
         ArrayList<Agency> agencies = new ArrayList<>();
@@ -115,6 +122,7 @@ public class DataSource {
 
     //AGENT --------------------------------------------------------------------------------------------------------------
     // Get Agent by id
+    // http://localhost:8080/JSPDay3RESTExample/rs/agent/getagent/{agentId}
     public Agent getAgent(int agentId)
     {
         String sql = "SELECT * FROM Agents WHERE AgentId=?";
@@ -123,27 +131,29 @@ public class DataSource {
         //position the cursor on the next/first row
         cursor.moveToNext();
         //create a product using this row
-        Agent agent = new Agent(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getInt(7));
+        Agent agent = new Agent(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getInt(7),cursor.getString(8),cursor.getString(9));
         cursor.close();
 
         return agent;
     }
 
     //Get all agents from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/agent/getagents
     public ArrayList<Agent> getAllAgents()
     {
         ArrayList<Agent> products = new ArrayList<>();
-        String [ ] columns = {"AgentId","AgtFirstName","AgtMiddleInitial","AgtLastName","AgtBusPhone", "AgtEmail","AgtPosition","AgencyId"};
+        String [ ] columns = {"AgentId","AgtFirstName","AgtMiddleInitial","AgtLastName","AgtBusPhone", "AgtEmail","AgtPosition","AgencyId","userid","password"};
         Cursor cursor = db.query("Agents",columns,null,null,null,null,null);
         while (cursor.moveToNext())
         {
-            products.add(new Agent(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getInt(7)));
+            products.add(new Agent(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getInt(7),cursor.getString(8),cursor.getString(9)));
         }
         cursor.close();
         return  products;
     }
 
     //Insert agent in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/agent/putagent
     public boolean insertAgent(Agent agent)
     {
         ContentValues cv = new ContentValues();
@@ -153,12 +163,13 @@ public class DataSource {
         cv.put("AgtBusPhone", agent.getAgtBusPhone().equals(null)?null:agent.getAgtBusPhone());
         cv.put("AgtEmail",agent.getAgtEmail().equals(null)?null:agent.getAgtEmail());
         cv.put("AgtPosition",agent.getAgtPosition().equals(null)?null:agent.getAgtPosition());
-        cv.put("AgencyId", agent.getAgtAgency()==0?null:agent.getAgtAgency());
+        cv.put("AgencyId", agent.getAgencyId()==0?null:agent.getAgencyId());
 
         return db.insert("Agents", null, cv) != -1;
     }
 
     //Update Agent in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/updateagent
     public boolean updateAgent(Agent agent){
         ContentValues cv = new ContentValues();
         cv.put("AgtFirstName",agent.getAgtFirstName().equals("")?null:agent.getAgtFirstName());
@@ -167,12 +178,13 @@ public class DataSource {
         cv.put("AgtBusPhone", agent.getAgtBusPhone().equals(null)?null:agent.getAgtBusPhone());
         cv.put("AgtEmail",agent.getAgtEmail().equals(null)?null:agent.getAgtEmail());
         cv.put("AgtPosition",agent.getAgtPosition().equals(null)?null:agent.getAgtPosition());
-        cv.put("AgencyId", agent.getAgtAgency()==0?null:agent.getAgtAgency());
+        cv.put("AgencyId", agent.getAgencyId()==0?null:agent.getAgencyId());
         String [] args = {agent.getAgentId()+""};
         String where = "AgentId=?";
         return db.update("Agents", cv, where, args) != -1;
     }
     //Delete Agent from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/agent/deleteagent/{ agentId }
     public boolean deleteAgent(Agent agent){
         String [] args = {agent.getAgentId()+""};
         String where = "AgentId=?";
@@ -182,6 +194,7 @@ public class DataSource {
      //BOOKING------------------------------------------------------------------------------------------------------------------
 
     //Update Booking in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/booking/updatebooking
     public boolean updateBooking(Booking booking){
         ContentValues cv = new ContentValues();
         @SuppressLint("SimpleDateFormat") DateFormat df=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -197,6 +210,7 @@ public class DataSource {
     }
 
     //Insert Booking in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/booking/putbooking
     public Booking insertBooking(Booking booking)
     {
         ContentValues cv = new ContentValues();
@@ -252,6 +266,7 @@ public class DataSource {
     }
 
     //Find BookingId by BookingNo
+    // http://localhost:8080/JSPDay3RESTExample/rs/booking/findBookingIdByBookingNo/{ bookingNo }
     private int findBookingIdByBookingNo(String bookingNo) {
         String sql = "SELECT BookingId FROM Bookings WHERE BookingNo=?";
         String [] args = {bookingNo+ ""};
@@ -263,6 +278,7 @@ public class DataSource {
     }
 
     //Get all Bookings from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/booking/getbookings
     public ArrayList<Booking> getBookings()
     {
         ArrayList<Booking> bookings = new ArrayList<>();
@@ -295,6 +311,7 @@ public class DataSource {
     //BOOKING DETAIL -------------------------------------------------------------------------------------------------------------
 
     //Insert Booking Detail in the database
+   // http://localhost:8080/JSPDay3RESTExample/rs/bookingdetail/putbookingdetail
     public boolean insertBookingDetail(BookingDetail bookingDetail)
     {
         ContentValues cv = new ContentValues();
@@ -318,6 +335,7 @@ public class DataSource {
     }
 
     //Update Booking Detail in the database
+    //http://localhost:8080/JSPDay3RESTExample/rs/bookingdetail/updatebookingdetail
     public boolean updateBookingDetail(BookingDetail bookingDetail){
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ContentValues cv = new ContentValues();
@@ -336,6 +354,7 @@ public class DataSource {
         return db.update("BookingDetails", cv, where, args) != -1;
     }
     //Delete Booking Detail from Database
+    //http://localhost:8080/JSPDay3RESTExample/rs/bookingdetail/deletebookingdetail/{bookingdetailid}
     public boolean deleteBookingDetail(BookingDetail bookingDetail){
         ContentValues cv = new ContentValues();
         //Instead of deleting the booking detail, the bookingId is multiplied by -1
@@ -346,6 +365,7 @@ public class DataSource {
     }
 
       //Get List of Booking Details by BookingId
+      // http://localhost:8080/JSPDay3RESTExample/rs/bookingdetail/getnookingdetailbybookingid/{bookingId}
     public ArrayList<BookingDetail> getBookingDetailByBookingId(int bookingId)
     {
         ArrayList<BookingDetail> bookingDetails = new ArrayList<>();
@@ -380,7 +400,11 @@ public class DataSource {
 
     //CLASS (BOOK CLASS) -------------------------------------------------------------------------------------------------------------
 
-    //Update Class in the database
+
+       //Update Class in the database
+       //INSERT THE OLD Primary KEY to Be Updated
+        // http://localhost:8080/JSPDay3RESTExample/rs/class/updateclass/{oldBookClassId}
+
     public boolean updateBookClass(BookClass bookClass){
         ContentValues cv = new ContentValues();
         cv.put("ClassId",bookClass.getClassId()+"");
@@ -392,6 +416,7 @@ public class DataSource {
     }
 
     //Insert Class in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/class/putclass
     public boolean insertBookClass(BookClass bookClass)
     {
         ContentValues cv = new ContentValues();
@@ -401,6 +426,7 @@ public class DataSource {
         return db.insert("Classes", null, cv) != -1;
     }
     //Delete Class from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/class/deleteclass/{ bookclassId }
     public boolean deleteBookClass(BookClass bookClass){
         String [] args = {bookClass.getClassId()+""};
         String where = "ClassId=?";
@@ -408,6 +434,7 @@ public class DataSource {
     }
 
     //Get all classes from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/class/getclasses
     public ArrayList<BookClass> getBookClasses()
     {
         ArrayList<BookClass> bookClasses = new ArrayList<>();
@@ -424,6 +451,7 @@ public class DataSource {
     //CUSTOMER----------------------------------------------------------------------------------------------------------------------
 
     //Get Customer by id
+    // http://localhost:8080/JSPDay3RESTExample/rs/customer/getcustomer/{ customerId }
     public Customer getCustomerById (int customerId)
     {
         String sql = "SELECT * FROM Customers WHERE CustomerId=?";
@@ -437,6 +465,7 @@ public class DataSource {
         return  customer;   }
 
     //Get all Customers
+    // http://localhost:8080/JSPDay3RESTExample/rs/customer/getcustomers
     public ArrayList<Customer> getCustomers()
     {
         ArrayList<Customer> customers = new ArrayList<>();
@@ -453,6 +482,7 @@ public class DataSource {
 
     //FEE ----------------------------------------------------------------------------------------------------------------------
     //Get all fees from the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/fee/getfees
     public ArrayList<Fee> getFees()
     {
         ArrayList<Fee> fees = new ArrayList<>();
@@ -470,6 +500,7 @@ public class DataSource {
     //PACKAGE--------------------------------------------------------------------------------------------------------------------------
 
     //Get Package by id
+    // http://localhost:8080/JSPDay3RESTExample/rs/package/getpackage/{ packageId }
     public ProdPackage getPackageById(int packageId)
     {
         String sql = "SELECT * FROM Packages WHERE PackageId=?";
@@ -493,6 +524,8 @@ public class DataSource {
         return prodPackage;
     }
 
+    //Get All Packages
+    //http://localhost:8080/JSPDay3RESTExample/rs/package/getpackages
     public ArrayList<ProdPackage> getPackages()
     {
         ArrayList<ProdPackage> packages = new ArrayList<>();
@@ -520,6 +553,7 @@ public class DataSource {
     //PRODUCT (PRODUCT ITEM)---------------------------------------------------------------------------------------------------------
 
     //Update Product in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/product/updateproduct
     public boolean updateProductItem(Product product){
         ContentValues cv = new ContentValues();
         cv.put("ProdName", product.getProdName());
@@ -529,6 +563,7 @@ public class DataSource {
     }
 
     //Insert Product in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/product/putproduct
     public boolean insertProductItem(Product product)
     {
         ContentValues cv = new ContentValues();
@@ -537,12 +572,15 @@ public class DataSource {
     }
 
     //Delete Product from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/product/deleteproduct/{ productId }
     public boolean deleteProductItem(Product product){
         String [] args = {product.getProductId()+""};
         String where = "ProductId=?";
         return db.delete("Products", where, args) != -1;
     }
 
+    //Get all products
+    //http://localhost:8080/JSPDay3RESTExample/rs/product/getproducts
     public ArrayList<Product> getProducts()
     {
         ArrayList<Product> products = new ArrayList<>();
@@ -557,6 +595,7 @@ public class DataSource {
     }
 
     //Get Products with Suppliers
+    // http://localhost:8080/JSPDay3RESTExample/rs/product/getproductswithsuppliers
     public ArrayList<Product> getProductsWithSuppliers()
     {
         ArrayList<Product> products = new ArrayList<>();
@@ -572,6 +611,7 @@ public class DataSource {
     }
 
     //Get Product by product-supplierID
+    // http://localhost:8080/JSPDay3RESTExample/rs/product/getproductbypsid/{ productSupplierId }
     public Product getProductByPSId(int productSupplierId)
     {
         String MY_QUERY = "SELECT DISTINCT b.ProductId, b.ProdName FROM Products_suppliers a INNER JOIN Products  b ON a.ProductId=b.ProductId WHERE a.ProductSupplierId=? ORDER BY b.ProdName";
@@ -584,7 +624,7 @@ public class DataSource {
     }
     //PRODUCT-SUPPLIER-----------------------------------------------------------------------------------------------------
     // Get all supplier-Products of a BookingId
-
+    // http://localhost:8080/JSPDay3RESTExample/rs/productsupplier/getpkgproductsbypkgId/{ packageId }
     public ArrayList<ProductSupplier> getPkgProductsByPkgId(int packageId)
     {
         ArrayList<ProductSupplier> packageProducts = new ArrayList<>();
@@ -601,6 +641,7 @@ public class DataSource {
     }
 
     //Get product-supplierId by product Id and supplier Id
+    // http://localhost:8080/JSPDay3RESTExample/rs/productsupplier/getProdSupIdByIds/{supplierId}/{productId}
     public int getProdSupIdByIds(int supplierId, int productId)
     {
         String MY_QUERY = "SELECT DISTINCT a.ProductSupplierId FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductId=? and b.SupplierId=?";
@@ -615,6 +656,8 @@ public class DataSource {
     //REGION---------------------------------------------------------------------------------------------------------------------------
 
     //Update Region in the database
+    //INSERT THE OLD Primary KEY to Be Updated
+    // http://localhost:8080/JSPDay3RESTExample/rs/region/updateregion/{oldRegionId}
     public boolean updateRegion(Region region){
         ContentValues cv = new ContentValues();
         cv.put("RegionId",region.getRegionId()+"");
@@ -625,6 +668,7 @@ public class DataSource {
     }
 
     //Insert Region in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/region/putregion
     public boolean insertRegion(Region region)
     {
         ContentValues cv = new ContentValues();
@@ -634,6 +678,7 @@ public class DataSource {
     }
 
     //Delete Region from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/region/deleteregion/{regionId}
     public boolean deleteRegion(Region region){
         String [] args = {region.getRegionId()+""};
         String where = "RegionId=?";
@@ -641,6 +686,7 @@ public class DataSource {
     }
 
     //Get all regions from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/region/getregions
     public ArrayList<Region> getRegions()
     {
         ArrayList<Region> regions = new ArrayList<>();
@@ -658,6 +704,7 @@ public class DataSource {
     //REWARD---------------------------------------------------------------------------------------------------------------------------
 
     //Update Reward in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/reward/updatereward/{rewardId}
     public boolean updateReward(Reward reward){
         ContentValues cv = new ContentValues();
         cv.put("RwdName", reward.getRwdName());
@@ -668,6 +715,7 @@ public class DataSource {
     }
 
     //Insert Reward in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/reward/putreward
     public boolean insertReward(Reward reward)
     {
         ContentValues cv = new ContentValues();
@@ -682,6 +730,7 @@ public class DataSource {
     }
 
     //Delete Reward from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/reward/deletereward/{ rewardId }
     public boolean deleteReward(Reward reward){
         String [] args = {reward.getRewardId()+""};
         String where = "RewardId=?";
@@ -689,6 +738,7 @@ public class DataSource {
     }
 
     //Get all Rewards from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/reward/getrewards
     public ArrayList<Reward> getRewards()
     {
         ArrayList<Reward> rewards = new ArrayList<>();
@@ -706,6 +756,7 @@ public class DataSource {
     //SUPPLIER---------------------------------------------------------------------------------------------------------------------------
 
     //Update Supplier in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/updatesupplier
     public boolean updateSupplier(Supplier supplier){
         ContentValues cv = new ContentValues();
         cv.put("SupName", supplier.getSupName());
@@ -715,6 +766,7 @@ public class DataSource {
     }
 
     //Insert Supplier in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/putsupplier
     public boolean insertSupplier(Supplier supplier)
     {
         ContentValues cv = new ContentValues();
@@ -728,12 +780,15 @@ public class DataSource {
     }
 
     //Delete Supplier from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/deletesupplier/{ supplierId }
     public boolean deleteSupplier(Supplier supplier){
         String [] args = {supplier.getSupplierId()+""};
         String where = "SupplierId=?";
         return db.delete("Suppliers", where, args) != -1;
     }
 
+    //Get all Suppliers
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsuppliers
     public ArrayList<Supplier> getSuppliers()
     {
         ArrayList<Supplier> suppliers = new ArrayList<>();
@@ -748,6 +803,7 @@ public class DataSource {
     }
 
     //Get Supplier with Products
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsupplierswithproducts
     public ArrayList<Supplier> getSuppliersWithProducts()
     {
         ArrayList<Supplier> suppliers = new ArrayList<>();
@@ -763,6 +819,7 @@ public class DataSource {
     }
 
     //Get Supplier by product-supplier Id
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsupplierbypsid/{ productSupplierId }
     public Supplier getSupplierByPSId(int productSupplierId)
     {
         String MY_QUERY = "SELECT DISTINCT b.SupplierId, b.SupName FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductSupplierId=? ORDER BY b.SupName";
@@ -774,7 +831,8 @@ public class DataSource {
         return supplier;
     }
 
-    //Get Supplier by Product Id
+    //Get Suppliers by Product Id
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsupplierswithproducts/{ productId }
     public ArrayList<Supplier> getSupplierByProductId(int productId)
     {
         ArrayList<Supplier> suppliers = new ArrayList<>();
@@ -792,6 +850,8 @@ public class DataSource {
     //TRIP TYPE--------------------------------------------------------------------------------------------------------------------------
 
     //Update Trip Type in the database
+    //INSERT THE OLD Primary KEY to Be Updated
+    //http://localhost:8080/JSPDay3RESTExample/rs/tritype/updatetruptype/{oldTripTypeId}
     public boolean updateTripType(TripType tripType){
         ContentValues cv = new ContentValues();
         cv.put("TripTypeId",tripType.getTripTypeId()+"");
@@ -802,6 +862,7 @@ public class DataSource {
     }
 
     //Insert Trip Type in the database
+    // http://localhost:8080/JSPDay3RESTExample/rs/triptype/puttriptype
     public boolean insertTripType(TripType tripType)
     {
         ContentValues cv = new ContentValues();
@@ -811,6 +872,7 @@ public class DataSource {
     }
 
     //Delete Trip Trip from Database
+    // http://localhost:8080/JSPDay3RESTExample/rs/triptype/deletetriptype/{ tripTypeId }
     public boolean deleteTripType(TripType tripType){
         String [] args = {tripType.getTripTypeId()+""};
         String where = "TripTypeId=?";
@@ -818,6 +880,7 @@ public class DataSource {
     }
 
     //Get all TripTypes from database
+    // http://localhost:8080/JSPDay3RESTExample/rs/triptype/gettriptypes
     public ArrayList<TripType> getTripTypes()
     {
         ArrayList<TripType> tripTypes = new ArrayList<>();

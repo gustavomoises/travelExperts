@@ -22,34 +22,41 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.travelexperts.BusinessLayer.Region;
-import com.example.travelexperts.DatabaseLayer.DataSource;
-import com.example.travelexperts.R;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.R;
+import java.util.concurrent.Executors;
 
 public class RegionActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clRegion;
     ListView lvListRegion;
-    DataSource dataSource;
-    ArrayList<Region> regions;
-    ArrayAdapter<Region> adapterRegion;
     Button btnAddRegion;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_region);
+        requestQueue = Volley.newRequestQueue(this);
+
         //Set background color form Settings
         clRegion= findViewById(R.id.clRegion);
         btnAddRegion=findViewById(R.id.btnAddRegion);
         lvListRegion=findViewById(R.id.lvListRegion);
-        //Get Fees from database
-        dataSource = new DataSource(this);
-        regions=dataSource.getRegions();
-        adapterRegion=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,regions);
-        lvListRegion.setAdapter(adapterRegion);
+
+        Executors.newSingleThreadExecutor().execute(new RegionActivity.GetRegions());
 
         btnAddRegion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +70,10 @@ public class RegionActivity extends AppCompatActivity {
         lvListRegion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Region region= (Region) lvListRegion.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), AddRegionActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Region",regions.get(position));
+                intent.putExtra("Region",region);
                 startActivity(intent);
             }
         });
@@ -155,5 +163,48 @@ public class RegionActivity extends AppCompatActivity {
                 break;
         }
     }
+    class GetRegions implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/region/getregions";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
 
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<Region> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            Region region = new Region(agt.getString("RegionId"), agt.getString("RegionName"));
+                            adapter.add(region);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<Region> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvListRegion.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
 }

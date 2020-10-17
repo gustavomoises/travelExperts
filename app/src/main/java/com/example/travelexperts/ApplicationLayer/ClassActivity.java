@@ -21,36 +21,43 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.travelexperts.BusinessLayer.BookClass;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class ClassActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clClass;
     ListView lvListClass;
-    DataSource dataSource;
-    ArrayList<BookClass> classes;
-    ArrayAdapter<BookClass> adapterClass;
     Button btnAddClass;
+    RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class);
+        requestQueue = Volley.newRequestQueue(this);
+
         //Set background color form Settings
         clClass= findViewById(R.id.clClass);
         btnAddClass=findViewById(R.id.btnAddClass);
 
 
         lvListClass=findViewById(R.id.lvListClass);
-        //Get Fees from database
-        dataSource = new DataSource(this);
-        classes=dataSource.getBookClasses();
-        adapterClass=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,classes);
-        lvListClass.setAdapter(adapterClass);
 
+        Executors.newSingleThreadExecutor().execute(new ClassActivity.GetBookClasses());
 
         btnAddClass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +71,10 @@ public class ClassActivity extends AppCompatActivity {
         lvListClass.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BookClass bookClass= (BookClass) lvListClass.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), AddClassActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Class",classes.get(position));
+                intent.putExtra("Class",bookClass);
                 startActivity(intent);
             }
         });
@@ -157,5 +165,48 @@ public class ClassActivity extends AppCompatActivity {
                 break;
         }
     }
+    class GetBookClasses implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/class/getclasses";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
 
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<BookClass> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            BookClass bookClass = new BookClass(agt.getString("ClassId"), agt.getString("ClassName"),agt.getString("ClassDesc"));
+                            adapter.add(bookClass);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<BookClass> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvListClass.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
 }

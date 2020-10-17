@@ -23,20 +23,30 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class FeeActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clFee;
     ListView lvListFee;
-    DataSource dataSource;
-    ArrayList<Fee> fees;
-    ArrayAdapter<Fee> adapterFee;
     Button btnAddFee;
+    RequestQueue requestQueue;
 
 
 
@@ -44,15 +54,15 @@ public class FeeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fee);
+        requestQueue = Volley.newRequestQueue(this);
         //Set background color form Settings
         clFee= findViewById(R.id.clFee);
         lvListFee=findViewById(R.id.lvListFee);
         btnAddFee=findViewById(R.id.btnAddFee);
-        //Get Fees from database
-        dataSource = new DataSource(this);
-        fees=dataSource.getFees();
-        adapterFee=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,fees);
-        lvListFee.setAdapter(adapterFee);
+
+
+
+        Executors.newSingleThreadExecutor().execute(new FeeActivity.GetFees());
 
 
         btnAddFee.setOnClickListener(new View.OnClickListener() {
@@ -67,9 +77,10 @@ public class FeeActivity extends AppCompatActivity {
         lvListFee.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fee fee= (Fee) lvListFee.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), AddFeeActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Fee",fees.get(position));
+                intent.putExtra("Fee",fee);
                 startActivity(intent);
             }
         });
@@ -159,5 +170,48 @@ public class FeeActivity extends AppCompatActivity {
                 break;
         }
     }
+    class GetFees implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/fee/getfees";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
 
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<Fee> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            Fee fee = new Fee(agt.getString("FeeId"), agt.getString("FeeName"),agt.getDouble("FeeAmt"),agt.getString("FeeDesc"));
+                            adapter.add(fee);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<Fee> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvListFee.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
 }

@@ -23,9 +23,10 @@ import com.example.travelexperts.ApplicationLayer.MiscellaneousActivity;
 import com.example.travelexperts.ApplicationLayer.PackageActivity;
 import com.example.travelexperts.ApplicationLayer.ProductActivity;
 import com.example.travelexperts.ApplicationLayer.SettingsActivity;
+import com.example.travelexperts.BusinessLayer.Agent;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
     SharedPreferences prefs;
     ConstraintLayout clMainActivity;
 

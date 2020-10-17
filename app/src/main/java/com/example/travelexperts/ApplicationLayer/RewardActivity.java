@@ -23,34 +23,42 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.travelexperts.BusinessLayer.Reward;
-import com.example.travelexperts.BusinessLayer.Supplier;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-import java.util.ArrayList;
+
+import java.util.concurrent.Executors;
 
 public class RewardActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clRewards;
     ListView lvListRewards;
-    DataSource dataSource;
-    ArrayList<Reward> rewards;
-    ArrayAdapter<Reward> adapterReward;
     Button btnAddReward;
+    RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rewards);
+        requestQueue = Volley.newRequestQueue(this);
+
         //Set background color form Settings
         clRewards= findViewById(R.id.clRewards);
         btnAddReward=findViewById(R.id.btnAddRewards);
         lvListRewards=findViewById(R.id.lvListRewards);
-        //Get Fees from database
-        dataSource = new DataSource(this);
-        rewards=dataSource.getRewards();
-        adapterReward=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,rewards);
-        lvListRewards.setAdapter(adapterReward);
+
+        Executors.newSingleThreadExecutor().execute(new RewardActivity.GetRewards());
 
         btnAddReward.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +72,10 @@ public class RewardActivity extends AppCompatActivity {
         lvListRewards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Reward reward= (Reward) lvListRewards.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), AddRewardActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Reward",rewards.get(position));
+                intent.putExtra("Reward",reward);
                 startActivity(intent);
             }
         });
@@ -159,6 +168,51 @@ public class RewardActivity extends AppCompatActivity {
             case "Green":
                 clRewards.setBackgroundColor(Color.GREEN);
                 break;
+        }
+    }
+
+    class GetRewards implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/reward/getrewards";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<Reward> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            Reward reward = new Reward(agt.getInt("RewardId"), agt.getString("RwdName"),agt.getString("RwdDesc"));
+                            adapter.add(reward);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<Reward> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvListRewards.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
         }
     }
 }

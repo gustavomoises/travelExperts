@@ -9,38 +9,40 @@ import java.io.Serializable;
 
 //Agent Class based on TravelExperts database
 public class Agent implements Serializable {
-    private int AgentId;
+    private int agentId;
     private String agtFirstName;
     private String agtMiddleInitial;
     private String agtLastName;
     private String agtBusPhone;
     private String agtEmail;
     private String agtPosition;
-    private int agtAgency;
+    private int agencyId;
+    private String userid;
+    private String password;
 
     //Constructor no Arguments
     public Agent() {
     }
 
-    //Constructor with 8 arguments
-    public Agent(int agentId, String agtFirstName, String agtMiddleInitial, String agtLastName, String agtBusPhone, String agtEmail, String agtPosition, int agtAgency) {
-        AgentId = agentId;
+    public Agent(int agentId, String agtFirstName, String agtMiddleInitial, String agtLastName, String agtBusPhone, String agtEmail, String agtPosition, int agencyId, String userid, String password ) {
+        this.agentId = agentId;
         this.agtFirstName = agtFirstName;
         this.agtMiddleInitial = agtMiddleInitial;
         this.agtLastName = agtLastName;
         this.agtBusPhone = agtBusPhone;
         this.agtEmail = agtEmail;
         this.agtPosition = agtPosition;
-        this.agtAgency = agtAgency;
+        this.agencyId = agencyId;
+        this.userid = userid;
+        this.password = password;
     }
 
-    //Getters and Setters
     public int getAgentId() {
-        return AgentId;
+        return agentId;
     }
 
     public void setAgentId(int agentId) {
-        AgentId = agentId;
+        this.agentId = agentId;
     }
 
     public String getAgtFirstName() {
@@ -91,17 +93,33 @@ public class Agent implements Serializable {
         this.agtPosition = agtPosition;
     }
 
-    public int getAgtAgency() {
-        return agtAgency;
+    public int getAgencyId() {
+        return agencyId;
     }
 
-    public void setAgtAgency(int agtAgency) {
-        this.agtAgency = agtAgency;
+    public void setAgencyId(int agencyId) {
+        this.agencyId = agencyId;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     //toString Method
     @Override
     public String toString() {
-        return  agtFirstName +  " "+ agtLastName + " - "+agtEmail;
+        return  agtFirstName +  " "+ agtLastName;
     }
 }

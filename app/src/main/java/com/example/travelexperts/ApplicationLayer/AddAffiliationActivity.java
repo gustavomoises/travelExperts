@@ -114,9 +114,10 @@ public class AddAffiliationActivity extends AppCompatActivity {
                         else {
                             if (mode.equals("update")) {
                                 affiliation.setAffName(etAddAffiliationAffName.getText() + "");
+                                String oldaffiliationId = affiliation.getAffiliationId();
                                 affiliation.setAffiliationId(typeId);
                                 affiliation.setAffDesc(etAddAffiliationAffDesc.getText() + "");
-                                if (dataSource.updateAffiliation(affiliation)) {
+                                if (dataSource.updateAffiliation(affiliation,oldaffiliationId)) {
                                     Toast.makeText(getApplicationContext(), " Affiliation Updated!", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(getApplicationContext(), AffiliationActivity.class);
                                     startActivity(intent);

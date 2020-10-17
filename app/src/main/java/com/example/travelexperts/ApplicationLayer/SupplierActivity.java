@@ -23,33 +23,43 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import com.example.travelexperts.BusinessLayer.Supplier;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-import java.util.ArrayList;
+
+import java.util.concurrent.Executors;
 
 public class SupplierActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clSupplier;
     ListView lvListSupplier;
-    DataSource dataSource;
-    ArrayList<Supplier> suppliers;
-    ArrayAdapter<Supplier> adapterSupplier;
     Button btnAddSupplier;
+    RequestQueue requestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supplier);
+        requestQueue = Volley.newRequestQueue(this);
         //Set background color form Settings
         clSupplier= findViewById(R.id.clSupplier);
         btnAddSupplier=findViewById(R.id.btnAddSupplier);
         lvListSupplier=findViewById(R.id.lvListSupplier);
-        //Get Fees from database
-        dataSource = new DataSource(this);
-        suppliers=dataSource.getSuppliers();
-        adapterSupplier=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,suppliers);
-        lvListSupplier.setAdapter(adapterSupplier);
+
+        Executors.newSingleThreadExecutor().execute(new SupplierActivity.GetSuppliers());
 
         btnAddSupplier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +73,10 @@ public class SupplierActivity extends AppCompatActivity {
         lvListSupplier.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Supplier supplier= (Supplier) lvListSupplier.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), AddSupplierActivity.class);
                 intent.putExtra("mode","update");
-                intent.putExtra("Supplier",suppliers.get(position));
+                intent.putExtra("Supplier",supplier);
                 startActivity(intent);
             }
         });
@@ -155,5 +166,48 @@ public class SupplierActivity extends AppCompatActivity {
                 break;
         }
     }
+    class GetSuppliers implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/supplier/getsuppliers";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
 
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<Supplier> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            Supplier supplier = new Supplier(agt.getInt("SupplierId"), agt.getString("SupName"));
+                            adapter.add(supplier);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<Supplier> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvListSupplier.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
 }

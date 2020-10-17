@@ -8,6 +8,8 @@ package com.example.travelexperts.ApplicationLayer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,35 +23,53 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.travelexperts.BusinessLayer.Booking;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
 
 public class BookingActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clBooking;
-    DataSource dataSource;
-    Booking booking;
-    ArrayList<Booking>  bookings;
     ListView lvBookingList;
-    ArrayAdapter<Booking> adapterBooking;
     Button btnAddBooking;
+    RequestQueue requestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
+        requestQueue = Volley.newRequestQueue(this);
+
         //Set background color form Settings
         clBooking= findViewById(R.id.clBooking);
         lvBookingList=findViewById(R.id.lvBookingList);
         btnAddBooking=findViewById(R.id.btnAddBooking);
-        dataSource = new DataSource(this);
+
+
+        Executors.newSingleThreadExecutor().execute(new BookingActivity.GetBookings());
 
         lvBookingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                booking = bookings.get(position);
+                Booking booking= (Booking) lvBookingList.getAdapter().getItem(position);
                 Intent intent = new Intent(getApplicationContext(), BookingDetailsActivity.class);
                 intent.putExtra("Booking",booking);
                 startActivity(intent);
@@ -80,7 +100,7 @@ public class BookingActivity extends AppCompatActivity {
                 break;
 
         }
-        loadData();
+
     }
 
 
@@ -151,11 +171,77 @@ public class BookingActivity extends AppCompatActivity {
                 clBooking.setBackgroundColor(Color.GREEN);
                 break;
         }
+
     }
-    //Get all the agents in the database and associate to the Listview
-    private void loadData() {
-        bookings=dataSource.getBookings();
-        adapterBooking=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,dataSource.getBookings());
-        lvBookingList.setAdapter(adapterBooking);
+    class GetBookings implements Runnable {
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/booking/getbookings";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    ArrayAdapter<Booking> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date date =new Date();
+                            try {
+                                date = dateFormat.parse(agt.getString("BookingDate"));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            char trip;
+                            try{
+                                trip =agt.getString("TripTypeId").charAt(0);
+                            }catch (Exception e) {
+                                trip='0';
+                            }
+
+                            int pkg;
+                            try{
+                                pkg =Integer.parseInt(agt.getString("PackageId"));
+                            }catch (Exception e) {
+                                pkg=0;
+                            }
+
+                            double trvl;
+                            try{
+                                trvl=  Double.parseDouble(agt.getString("TravelerCount"));
+                            }catch (Exception e) {
+                                trvl=0;
+                            }
+                            Booking booking = new Booking(agt.getInt("BookingId"), date,agt.getString("BookingNo"),trvl,agt.getInt("CustomerId"),trip,pkg);
+                            adapter.add(booking);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //update ListView with the adapter of Agents
+                    final ArrayAdapter<Booking> finalAdapter = adapter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            lvBookingList.setAdapter(finalAdapter);
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
     }
 }
