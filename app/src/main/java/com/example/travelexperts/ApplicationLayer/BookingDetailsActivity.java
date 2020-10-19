@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -38,7 +37,6 @@ import com.example.travelexperts.BusinessLayer.Customer;
 
 import com.example.travelexperts.BusinessLayer.Fee;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
-import com.example.travelexperts.BusinessLayer.ProductSupplier;
 import com.example.travelexperts.BusinessLayer.TripType;
 
 import com.example.travelexperts.R;
@@ -62,8 +60,6 @@ public class BookingDetailsActivity extends AppCompatActivity {
     Button btnEditBookingDetail;
     TextView tvBookingNo,tvBookingDate, tvTravelerCount,tvCustomerBookingDetail,tvTripType, tvBookingSubTotal, tvBookingAgencyCommission,tvBookingAgencyFee,tvBookingTotal;
     ListView lvBookingPackage, lvBookingProducts;
-    ArrayList<ProdPackage> packages;
-    ArrayList<Double> costProducts;
     RequestQueue requestQueue;
 
 
@@ -411,7 +407,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            costProducts = new ArrayList<>();
+                            ArrayList<Double> costProducts = new ArrayList<>();
                             for (BookingDetail bk :bookingDetails )
                             {
                                 costProducts.add(booking.getTravelerCount()*bk.getBasePrice());
@@ -521,7 +517,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (booking.getPackageId()!=0){
-                                packages=new ArrayList<>();
+                                ArrayList<ProdPackage> packages=new ArrayList<>();
                                 packages.add(prodPackage);
 
                                 String [] from = {"desc","unitPrice","qty","total"};

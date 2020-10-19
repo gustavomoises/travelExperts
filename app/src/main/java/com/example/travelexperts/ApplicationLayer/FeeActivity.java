@@ -37,8 +37,6 @@ import org.json.JSONObject;
 
 import com.example.travelexperts.BusinessLayer.Fee;
 import com.example.travelexperts.R;
-
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 public class FeeActivity extends AppCompatActivity {
