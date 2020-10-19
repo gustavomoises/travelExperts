@@ -30,9 +30,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.travelexperts.BusinessLayer.Affiliation;
 import com.example.travelexperts.BusinessLayer.TripType;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import org.json.JSONArray;
@@ -79,8 +77,6 @@ public class AddTripTypeActivity extends AppCompatActivity {
             tripType=new TripType();
             etAddTripTypeTripTypeName.setText("");
             etAddTripTypeTripTypeId.setText("");
-
-
         }
 
 

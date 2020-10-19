@@ -25,19 +25,32 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.example.travelexperts.BusinessLayer.BookClass;
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Fee;
 import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.Region;
+import com.example.travelexperts.BusinessLayer.Reward;
 import com.example.travelexperts.BusinessLayer.Supplier;
 import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 
 public class AddBookDetailsActivity extends AppCompatActivity {
@@ -91,6 +104,8 @@ public class AddBookDetailsActivity extends AppCompatActivity {
         //Insert blank Region
         Region fakeRegion = new Region("","");
         regions.add(fakeRegion);
+
+
         regions.addAll(dataSource.getRegions());
         ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,regions );
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

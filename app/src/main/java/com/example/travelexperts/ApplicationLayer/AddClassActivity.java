@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,22 +23,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.BookClass;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
 public class AddClassActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddClass;
     Button btnAddClassCancel,btnAddClassSave, btnAddClassDelete;
-    DataSource dataSource;
     String mode;
     BookClass bookClass;
     EditText etAddClassClassName, etAddClassClassId,etAddCLassClassDesc;
+    RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_class);
+        requestQueue = Volley.newRequestQueue(this);
         //Set background color form Settings
         clAddClass= findViewById(R.id.clAddClass);
         btnAddClassSave=findViewById(R.id.btnAddClassSave);
@@ -46,7 +62,7 @@ public class AddClassActivity extends AppCompatActivity {
         etAddCLassClassDesc=findViewById(R.id.etAddClassClassDesc);
         etAddClassClassId=findViewById(R.id.etAddClassClassId);
         etAddClassClassName=findViewById(R.id.etAddCLassClassName);
-        dataSource = new DataSource(this);
+
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
@@ -87,50 +103,7 @@ public class AddClassActivity extends AppCompatActivity {
                     if (typeId.length()>5)
                         Toast.makeText(getApplicationContext(), " Maximum of 5 characters is required for the Class Id", Toast.LENGTH_LONG).show();
                     else {
-                        boolean exist = false;
-                        int k=0;
-                        for (BookClass r : dataSource.getBookClasses()) {
-                            if (mode.equals("update"))
-                            {
-                                if (r.getClassId().equals(typeId) && !(bookClass.getClassId().equals(typeId)))
-                                    exist = true;
-                            }
-                            else
-                            {
-                                if (r.getClassId().equals(typeId))
-                                    exist = true;
-                            }
-
-                        }
-                        if (exist)
-                            Toast.makeText(getApplicationContext(), " Id associated to another class. Please, choose another Id!!!", Toast.LENGTH_LONG).show();
-                        else {
-                            if (mode.equals("update")) {
-                                bookClass.setClassName(etAddClassClassName.getText() + "");
-                                bookClass.setClassId(typeId);
-                                bookClass.setClassDes(etAddCLassClassDesc.getText() + "");
-                                if (dataSource.updateBookClass(bookClass)) {
-                                    Toast.makeText(getApplicationContext(), " Class Updated!", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), " Class Update Failed!", Toast.LENGTH_LONG).show();
-                                }
-
-                            } else {
-                                bookClass.setClassName(etAddClassClassName.getText() + "");
-                                bookClass.setClassId(typeId);
-                                bookClass.setClassDes(etAddCLassClassDesc.getText() + "");
-                                if (dataSource.insertBookClass(bookClass)) {
-                                    Toast.makeText(getApplicationContext(), " Class Inserted!", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(),ClassActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), " Class Insertion Failed!", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                        }
+                        Executors.newSingleThreadExecutor().execute(new AddClassActivity.VerifyBookClassId(typeId));
                     }
                 }
             }
@@ -139,9 +112,7 @@ public class AddClassActivity extends AppCompatActivity {
         btnAddClassDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataSource.deleteBookClass(bookClass);
-                Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
-                startActivity(intent);
+                Executors.newSingleThreadExecutor().execute(new AddClassActivity.DeleteBookClass(bookClass.getClassId()));
             }
         });
 
@@ -229,6 +200,238 @@ public class AddClassActivity extends AppCompatActivity {
             case "Green":
                 clAddClass.setBackgroundColor(Color.GREEN);
                 break;
+        }
+    }
+
+    class VerifyBookClassId implements Runnable {
+        private String typeId;
+
+        public VerifyBookClassId(String typeId) {
+            this.typeId = typeId;
+        }
+
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/class/getclasses";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    final ArrayList<BookClass> bookClasses = new ArrayList<>();
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject agt = jsonArray.getJSONObject(i);
+                            BookClass bookClass = new BookClass(agt.getString("ClassId"), agt.getString("ClassName"),agt.getString("ClassDesc"));
+                            bookClasses.add(bookClass);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //display result message
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            boolean exist = false;
+                            int k=0;
+                            for (BookClass r : bookClasses) {
+                                if (mode.equals("update"))
+                                {
+                                    if (r.getClassId().equals(typeId) && !(bookClass.getClassId().equals(typeId)))
+                                        exist = true;
+                                }
+                                else
+                                {
+                                    if (r.getClassId().equals(typeId))
+                                        exist = true;
+                                }
+
+                            }
+                            if (exist)
+                                Toast.makeText(getApplicationContext(), " Id associated to another class. Please, choose another Id!!!", Toast.LENGTH_LONG).show();
+                            else {
+                                bookClass.setClassName(etAddClassClassName.getText() + "");
+                                bookClass.setClassDes(etAddCLassClassDesc.getText() + "");
+                                String oldBookClassId=bookClass.getClassId();
+                                bookClass.setClassId(typeId);
+
+                                if (mode.equals("update"))
+                                    Executors.newSingleThreadExecutor().execute(new AddClassActivity.PostBookClass(bookClass,oldBookClassId));
+                                else
+                                    Executors.newSingleThreadExecutor().execute(new AddClassActivity.PutBookClass(bookClass));
+                            }
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
+
+
+    class PostBookClass implements Runnable {
+        private BookClass bookClass;
+        private String oldBookClassId;
+
+        public PostBookClass(BookClass bookClass, String oldBookClassId) {
+            this.bookClass = bookClass;
+            this.oldBookClassId = oldBookClassId;
+        }
+
+        @Override
+        public void run() {
+            //send JSON data to REST service
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/class/postclass/"+oldBookClassId;
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("ClassId", bookClass.getClassId()+ "");
+                obj.put("ClassName", bookClass.getClassName() + "");
+                obj.put("ClassDesc", bookClass.getClassDes() + "");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            Log.d("harv", "response=" + response);
+                            VolleyLog.wtf(response.toString(), "utf-8");
+
+                            //display result message
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                                        if(response.getString("message").equals("Class updated successfully"))
+                                        {
+                                            Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("harv", "error=" + error);
+                            VolleyLog.wtf(error.getMessage(), "utf-8");
+                        }
+                    });
+
+            requestQueue.add(jsonObjectRequest);
+        }
+    }
+
+    class DeleteBookClass implements Runnable {
+        private String bookClassId;
+
+        public DeleteBookClass(String bookClassId) {
+            this.bookClassId = bookClassId;
+        }
+
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/class/deleteclass/" + bookClassId;
+            StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(final String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            if(response.equals("Class Deleted Successfully"))
+                            {
+                                Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }
+    class PutBookClass implements Runnable {
+        private BookClass bookClass;
+
+        public PutBookClass(BookClass bookClass) {
+            this.bookClass = bookClass;
+        }
+
+        @Override
+        public void run() {
+            //send JSON data to REST service
+            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/class/putclass";
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("ClassId", bookClass.getClassId() + "");
+                obj.put("ClassName", bookClass.getClassName() + "");
+                obj.put("ClassDesc", bookClass.getClassDes() + "");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            Log.d("harv", "response=" + response);
+                            VolleyLog.wtf(response.toString(), "utf-8");
+
+                            //display result message
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                                        if(response.getString("message").equals("Class inserted successfully"))
+                                        {
+                                            Intent intent = new Intent(getApplicationContext(),ClassActivity.class);
+                                            startActivity(intent);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("harv", "error=" + error);
+                            VolleyLog.wtf(error.getMessage(), "utf-8");
+                        }
+                    });
+
+            requestQueue.add(jsonObjectRequest);
         }
     }
 
