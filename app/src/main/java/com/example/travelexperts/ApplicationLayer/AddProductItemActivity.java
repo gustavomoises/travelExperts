@@ -204,7 +204,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/product/postproduct";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/postproduct";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ProductId", product.getProductId()+ "");
@@ -259,7 +259,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/product/putproduct";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/putproduct";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ProdName", product.getProdName()+ "");
@@ -315,7 +315,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/product/deleteproduct/" + productId;
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/deleteproduct/" + productId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {

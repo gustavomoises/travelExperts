@@ -176,7 +176,7 @@ public class RewardActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/reward/getrewards";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/reward/getrewards";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

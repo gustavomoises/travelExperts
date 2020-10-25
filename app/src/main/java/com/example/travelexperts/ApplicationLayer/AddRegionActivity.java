@@ -208,7 +208,7 @@ public class AddRegionActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/region/getregions";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/region/getregions";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -287,7 +287,7 @@ public class AddRegionActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/region/postregion/"+oldRegionId;
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/region/postregion/"+oldRegionId;
             JSONObject obj = new JSONObject();
             try {
                 obj.put("RegionId", region.getRegionId()+ "");
@@ -343,7 +343,7 @@ public class AddRegionActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/region/deleteregion/" + regionId;
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/region/deleteregion/" + regionId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
@@ -381,7 +381,7 @@ public class AddRegionActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/region/putregion";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/region/putregion";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("RegionId", region.getRegionId() + "");

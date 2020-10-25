@@ -202,7 +202,7 @@ public class AddSupplierActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/supplier/newsupplier";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/supplier/newsupplier";
             //New Request
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
@@ -245,7 +245,7 @@ public class AddSupplierActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/supplier/postsupplier";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/supplier/postsupplier";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("SupplierId", supplier.getSupplierId()+ "");
@@ -300,7 +300,7 @@ public class AddSupplierActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/supplier/putsupplier";
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/supplier/putsupplier";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("SupplierId", supplier.getSupplierId() + "");
@@ -357,7 +357,7 @@ public class AddSupplierActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.64:8080/JSPDay3RESTExample/rs/supplier/deletesupplier/" + supplierId;
+            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/supplier/deletesupplier/" + supplierId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
