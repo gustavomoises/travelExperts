@@ -120,7 +120,6 @@ public class AddBookDetailsActivity extends AppCompatActivity {
         {
             btnBookingDetailDelete.setEnabled(true);
             bookingDetail =(BookingDetail) intent.getSerializableExtra("BookingDetail");
-
             //Set Booking details
             tvBookingDetailBookingNo.setText(booking.getBookingNo());
             tvBookingDetailItinerary.setText(String.format("%.2f",bookingDetail.getItineraryNo()));

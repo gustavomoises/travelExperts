@@ -846,7 +846,25 @@ public class AddBookingActivity extends AppCompatActivity {
                                     agencyPrice = 0;
                                 }
 
-                                BookingDetail bookingDetails = new BookingDetail(agt.getInt("BookingDetailId"), itin, dateStart, dateEnd, agt.getString("Description"), agt.getString("Destination"), basePrice, agencyPrice, agt.getInt("BookingId"), agt.getString("RegionId"), agt.getString("ClassId"), agt.getString("FeeId"), agt.getInt("ProductSupplierId"));
+                                String nulo="null";
+                                String region="";
+                                if (agt.getString("RegionId").equals(nulo))
+                                    region="";
+                                else
+                                    region=agt.getString("RegionId");
+                                String bookclass="";
+                                if (agt.getString("ClassId").equals(nulo))
+                                    bookclass="";
+                                else
+                                    bookclass=agt.getString("ClassId");
+                                String fee="";
+                                if (agt.getString("FeeId").equals(nulo))
+                                    fee="";
+                                else
+                                    fee=agt.getString("FeeId");
+
+
+                                BookingDetail bookingDetails = new BookingDetail(agt.getInt("BookingDetailId"), itin, dateStart, dateEnd, agt.getString("Description"), agt.getString("Destination"), basePrice, agencyPrice, agt.getInt("BookingId"), region, bookclass, fee, agt.getInt("ProductSupplierId"));
                                 adapter.add(bookingDetails);
                             }
                         } catch (JSONException e) {
