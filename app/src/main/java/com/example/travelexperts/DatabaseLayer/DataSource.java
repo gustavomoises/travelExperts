@@ -21,7 +21,7 @@ import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.BusinessLayer.ProdPackage;
+import com.example.travelexperts.BusinessLayer.Package;
 import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.ProductSupplier;
 import com.example.travelexperts.BusinessLayer.Region;
@@ -501,7 +501,7 @@ public class DataSource {
 
     //Get Package by id
     // http://localhost:8080/JSPDay3RESTExample/rs/package/getpackage/{ packageId }
-    public ProdPackage getPackageById(int packageId)
+    public Package getPackageById(int packageId)
     {
         String sql = "SELECT * FROM Packages WHERE PackageId=?";
         String [] args = {packageId+ ""};
@@ -519,16 +519,16 @@ public class DataSource {
             e.printStackTrace();
         }
 
-        ProdPackage prodPackage= new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
+        Package prodPackage= new Package(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
         cursor.close();
         return prodPackage;
     }
 
     //Get All Packages
     //http://localhost:8080/JSPDay3RESTExample/rs/package/getpackages
-    public ArrayList<ProdPackage> getPackages()
+    public ArrayList<Package> getPackages()
     {
-        ArrayList<ProdPackage> packages = new ArrayList<>();
+        ArrayList<Package> packages = new ArrayList<>();
         String [ ] columns = {"PackageId","PkgName","PkgStartDate", "PkgEndDate", "PkgDesc","PkgBasePrice","PkgAgencyCommission"};
         Cursor cursor = db.query("Packages",columns,null,null,null,null,"PkgName");
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -544,7 +544,7 @@ public class DataSource {
                 e.printStackTrace();
             }
 
-            packages.add(new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
+            packages.add(new Package(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
         }
         cursor.close();
         return  packages;
