@@ -204,7 +204,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/triptype/gettriptypes";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/triptype/gettriptypes";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -253,7 +253,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/customer/getcustomers";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/customer/getcustomers";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -310,7 +310,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/fee/getfees";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/fee/getfees";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -367,7 +367,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/bookingdetail/getbookingdetailsbybookingid/"+booking.getBookingId();
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/bookingdetail/getbookingdetailsbybookingid/"+booking.getBookingId();
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -477,7 +477,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/package/getpackage/"+booking.getPackageId();
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/package/getpackage/"+booking.getPackageId();
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
