@@ -9,7 +9,7 @@ package com.example.travelexperts.BusinessLayer;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Package implements Serializable {
+public class ProdPackage implements Serializable {
     private int packageId;
     private String pkgName;
     private Date pkgStartDate;
@@ -19,11 +19,11 @@ public class Package implements Serializable {
     private double pkgAgencyCommission;
 
     //Constructor no arguments
-    public Package() {
+    public ProdPackage() {
     }
 
     //Constructor 7 arguments
-    public Package(int packageId, String pkgName, Date pkgStartDate, Date pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
+    public ProdPackage(int packageId, String pkgName, Date pkgStartDate, Date pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
         this.packageId = packageId;
         this.pkgName = pkgName;
         this.pkgStartDate = pkgStartDate;

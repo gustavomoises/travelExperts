@@ -36,7 +36,7 @@ import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
 
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.BusinessLayer.Package;
+import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.TripType;
 
 import com.example.travelexperts.R;
@@ -484,7 +484,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
                     VolleyLog.wtf(response, "utf-8");
 
                     //convert JSON data from response string into an ArrayAdapter of Agents
-                    final Package prodPackage = new Package();
+                    final ProdPackage prodPackage = new ProdPackage();
                     try {
                         JSONObject agt = new JSONObject(response);
                         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -517,13 +517,13 @@ public class BookingDetailsActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (booking.getPackageId()!=0){
-                                ArrayList<Package> packages=new ArrayList<>();
+                                ArrayList<ProdPackage> packages=new ArrayList<>();
                                 packages.add(prodPackage);
 
                                 String [] from = {"desc","unitPrice","qty","total"};
                                 int [] to = {R.id.tvBookingPackageDesc, R.id.tvBookingPckUnitPrice,R.id.tvBookingPkgQty,R.id.tvBookingPkgTotal};
                                 ArrayList<HashMap<String,String>> data = new ArrayList<>();
-                                for (Package p :packages){
+                                for (ProdPackage p :packages){
                                     HashMap<String,String> map = new HashMap<>();
                                     map.put("desc",p.getPkgName()+" - "+p.getPkgDec());
                                     map.put("unitPrice", String.format("$ %.2f",p.getPkgBasePrice()));

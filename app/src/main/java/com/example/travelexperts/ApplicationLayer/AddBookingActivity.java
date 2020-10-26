@@ -39,7 +39,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Booking;
 import com.example.travelexperts.BusinessLayer.BookingDetail;
 import com.example.travelexperts.BusinessLayer.Customer;
-import com.example.travelexperts.BusinessLayer.Package;
+import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.BusinessLayer.TripType;
 import com.example.travelexperts.R;
 
@@ -170,7 +170,7 @@ public class AddBookingActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(!FirstTimePkg)
                 {
-                    Package prodPackage = (Package)spBookingPackage.getSelectedItem();
+                    ProdPackage prodPackage = (ProdPackage)spBookingPackage.getSelectedItem();
                     booking.setPackageId(prodPackage.getPackageId());
                 }
                 else
@@ -474,10 +474,10 @@ public class AddBookingActivity extends AppCompatActivity {
                     VolleyLog.wtf(response, "utf-8");
 
                     //convert JSON data from response string into an ArrayAdapter of Agents
-                    final ArrayList<Package> prodPackages = new ArrayList<>();
+                    final ArrayList<ProdPackage> prodPackages = new ArrayList<>();
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-                        Package fakePackage = new Package();
+                        ProdPackage fakePackage = new ProdPackage();
                         fakePackage.setPkgDec("");
                         fakePackage.setPkgName("");
                         prodPackages.add(fakePackage);
@@ -497,7 +497,7 @@ public class AddBookingActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Package prodPackage = new Package(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart,dateEnd,agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart,dateEnd,agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
                             prodPackages.add(prodPackage);
                         }
                     } catch (JSONException e) {
@@ -509,13 +509,13 @@ public class AddBookingActivity extends AppCompatActivity {
                         public void run() {
 
                             //Get TripTypes from database
-                            ArrayAdapter<Package> prodPackageAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item,prodPackages );
+                            ArrayAdapter<ProdPackage> prodPackageAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item,prodPackages );
                             prodPackageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spBookingPackage.setAdapter(prodPackageAdapter);
                             if(mode.equals("update"))
                             {
                                 int help=0;
-                                for (Package tt : prodPackages)
+                                for (ProdPackage tt : prodPackages)
                                 {
                                     if (booking.getPackageId() == tt.getPackageId())
                                         break;
