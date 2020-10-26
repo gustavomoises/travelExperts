@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.R;
 
@@ -103,6 +104,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_details);
+        requestQueue = Volley.newRequestQueue(this);
 
         Intent receive = getIntent();
 
@@ -154,8 +156,9 @@ public class PackageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                ProdPackage prodPackage = null;
                 try {
-                    ProdPackage prodPackage = new ProdPackage(
+                    prodPackage = new ProdPackage(
                             Integer.parseInt(etPackageId.getText().toString()),
                             etName.getText().toString(),
                             sdf.parse(etStartDate.getText().toString()),
