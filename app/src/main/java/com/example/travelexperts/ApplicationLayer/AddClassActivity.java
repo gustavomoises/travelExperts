@@ -214,7 +214,7 @@ public class AddClassActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/class/getclasses";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/class/getclasses";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -293,7 +293,7 @@ public class AddClassActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/class/postclass/"+oldBookClassId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/class/postclass/"+oldBookClassId;
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ClassId", bookClass.getClassId()+ "");
@@ -350,7 +350,7 @@ public class AddClassActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/class/deleteclass/" + bookClassId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/class/deleteclass/" + bookClassId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
@@ -388,7 +388,7 @@ public class AddClassActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/class/putclass";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/class/putclass";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ClassId", bookClass.getClassId() + "");

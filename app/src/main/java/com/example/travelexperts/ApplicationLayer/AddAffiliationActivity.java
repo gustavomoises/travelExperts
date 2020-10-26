@@ -224,7 +224,7 @@ public class AddAffiliationActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/affiliation/postaffiliation/"+oldAffiliationId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/affiliation/postaffiliation/"+oldAffiliationId;
             JSONObject obj = new JSONObject();
             try {
                 obj.put("AffilitationId", affiliation.getAffiliationId()+ "");
@@ -281,7 +281,7 @@ public class AddAffiliationActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/affiliation/deleteaffiliation/" + affiliationId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/affiliation/deleteaffiliation/" + affiliationId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
@@ -319,7 +319,7 @@ public class AddAffiliationActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/affiliation/puttaffiliation";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/affiliation/puttaffiliation";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("AffilitationId", affiliation.getAffiliationId() + "");
@@ -377,7 +377,7 @@ public class AddAffiliationActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/affiliation/getaffiliations";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/affiliation/getaffiliations";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
