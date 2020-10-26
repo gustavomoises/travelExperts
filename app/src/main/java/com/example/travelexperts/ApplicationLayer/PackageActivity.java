@@ -36,7 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.travelexperts.BusinessLayer.ProdPackage;
+import com.example.travelexperts.BusinessLayer.Package;
 import com.example.travelexperts.R;
 
 import java.text.DateFormat;
@@ -81,7 +81,7 @@ public class PackageActivity extends AppCompatActivity {
         lvPackageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ProdPackage prodPackage= (ProdPackage) lvPackageList.getAdapter().getItem(position);
+                Package prodPackage= (Package) lvPackageList.getAdapter().getItem(position);
                 // intent to initialize another activity
                 Intent intent = new Intent(getApplicationContext(), PackageDetailsActivity.class);
                 // make it available for new activity
@@ -186,14 +186,14 @@ public class PackageActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/package/getpackages";
+            String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/getpackages";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     VolleyLog.wtf(response, "utf-8");
 
                     //convert JSON data from response string into an ArrayAdapter of Agents
-                    ArrayAdapter<ProdPackage> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    ArrayAdapter<Package> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
                     try {
                         JSONArray jsonArray = new JSONArray(response);
                         for (int i=0; i<jsonArray.length(); i++)
@@ -227,7 +227,7 @@ public class PackageActivity extends AppCompatActivity {
                                 pkgAgency=0;
                             }
 
-                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart, dateEnd, agt.getString("PkgDesc"), pkgPrice, pkgAgency);
+                            Package prodPackage = new Package(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart, dateEnd, agt.getString("PkgDesc"), pkgPrice, pkgAgency);
                             adapter.add(prodPackage);
                         }
                     } catch (JSONException e) {
@@ -235,7 +235,7 @@ public class PackageActivity extends AppCompatActivity {
                     }
 
                     //update ListView with the adapter of Agents
-                    final ArrayAdapter<ProdPackage> finalAdapter = adapter;
+                    final ArrayAdapter<Package> finalAdapter = adapter;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

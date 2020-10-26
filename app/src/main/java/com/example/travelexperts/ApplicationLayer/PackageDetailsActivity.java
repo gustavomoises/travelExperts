@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.travelexperts.BusinessLayer.ProdPackage;
+import com.example.travelexperts.BusinessLayer.Package;
 import com.example.travelexperts.R;
 
 public class PackageDetailsActivity extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
         Intent receive = getIntent();
 
         // receives agent from sending activity
-        ProdPackage prodPackage = (ProdPackage) receive.getSerializableExtra("package");
+        Package prodPackage = (Package) receive.getSerializableExtra("package");
         // receives mode from sending activity
         String mode = (String) receive.getStringExtra("mode");
         // reference for texts
