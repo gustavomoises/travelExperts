@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -40,6 +41,7 @@ import java.util.concurrent.Executors;
 public class PackageDetailsActivity extends AppCompatActivity {
 
     EditText etPackageId, etCommission, etBasePrice, etDescription, etEndDate, etName, etStartDate;
+    TextView lbId;
     SharedPreferences prefs;
     Button btnConfirm;
     ConstraintLayout clPackage;
@@ -169,6 +171,8 @@ public class PackageDetailsActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etStartDate = findViewById(R.id.etStartDate);
         btnConfirm = findViewById(R.id.btnConfirm);
+        lbId = findViewById(R.id.lbId);
+
 
         //Set background color form Settings
         clPackage= findViewById(R.id.clPackage);
@@ -187,19 +191,39 @@ public class PackageDetailsActivity extends AppCompatActivity {
                 break;
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateStr = null;
+        String endDateStr = null;
+
+        try {
+            // convert from provided format into date variable
+            Date startDate = new Date(prodPackage.getPkgStartDate() + "");
+            // convert into fromatted string
+            startDateStr = sdf.format(startDate);
+            Date endDate = new Date(prodPackage.getPkgEndDate() + "");
+            endDateStr = sdf.format(endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (mode.equals("edit")) {
+            // pre-populate fields
             etPackageId.setText(prodPackage.getPackageId() + "");
             etCommission.setText(prodPackage.getPkgAgencyCommission() + "");
             etBasePrice.setText(prodPackage.getPkgBasePrice() + "");
             etDescription.setText(prodPackage.getPkgDec());
-            etEndDate.setText(prodPackage.getPkgEndDate() + "");
+            etEndDate.setText(endDateStr);
             etName.setText(prodPackage.getPkgName());
-            etStartDate.setText(prodPackage.getPkgStartDate() + "");
+            etStartDate.setText(startDateStr);
+            // enable confirm button
             btnConfirm.setVisibility(View.VISIBLE);
         }
         else {
+            // enable confirm button
             btnConfirm.setVisibility(View.VISIBLE);
+            // disable Id field since populated in database (autoincrement enabled in database)
             etPackageId.setVisibility(View.INVISIBLE);
+            lbId.setVisibility(View.INVISIBLE);
         }
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -207,37 +231,43 @@ public class PackageDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ProdPackage prodPackage = null;
 
-                // date validation
+                // innocent until proven guilty
                 boolean lv_validated = true;
 
-                try {
-                    java.sql.Date startDate = java.sql.Date.valueOf(etStartDate.getText().toString());
-                    java.sql.Date endDate = java.sql.Date.valueOf(etEndDate.getText().toString());
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Wrong date format", Toast.LENGTH_LONG).show();
-                    lv_validated = false;
+                // blank field validation
+                if (etName.getText().toString().equals("") ||
+                        etStartDate.getText().toString().equals("") ||
+                        etEndDate.getText().toString().equals("") ||
+                        etDescription.getText().toString().equals("") ||
+                        etBasePrice.getText().toString().equals("") ||
+                        etCommission.getText().toString().equals(""))
+                {
+                        Toast.makeText(getApplicationContext(), "Blank field", Toast.LENGTH_LONG).show();
+                        lv_validated = false;
                 }
 
                 // numeric validation
-                try {
-                    double price = Double.parseDouble(etBasePrice.getText().toString());
-                    double commission = Double.parseDouble(etCommission.getText().toString());
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Wrong number format", Toast.LENGTH_LONG).show();
-                    lv_validated = false;
+                if (lv_validated) {
+                    try {
+                        double price = Double.parseDouble(etBasePrice.getText().toString());
+                        double commission = Double.parseDouble(etCommission.getText().toString());
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Wrong number format", Toast.LENGTH_LONG).show();
+                        lv_validated = false;
+                    }
                 }
 
-                // blank fields
-                       if ( etName.getText().toString().equals("")  ||
-                            etStartDate.getText().toString().equals("") ||
-                               etEndDate.getText().toString().equals("") ||
-                            etDescription.getText().toString().equals("") ||
-                               etBasePrice.getText().toString().equals("") ||
-                               etCommission.getText().toString().equals(""))
-                       {
-                           Toast.makeText(getApplicationContext(), "Blank field", Toast.LENGTH_LONG).show();
-                           lv_validated = false;
-                       }
+
+                // date validation
+                if (lv_validated) {
+                    try {
+                        java.sql.Date startDate = java.sql.Date.valueOf(etStartDate.getText().toString());
+                        java.sql.Date endDate = java.sql.Date.valueOf(etEndDate.getText().toString());
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Wrong date format", Toast.LENGTH_LONG).show();
+                        lv_validated = false;
+                    }
+                }
 
                 if (lv_validated) {
                     // if user input is correct, post/put user entry

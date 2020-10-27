@@ -211,7 +211,7 @@ public class PackageActivity extends AppCompatActivity {
 
                             Date dateEnd =new Date();
                             try {
-                                dateStart = dateFormat.parse(agt.getString("PkgEndDate"));
+                                dateEnd = dateFormat.parse(agt.getString("PkgEndDate"));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
