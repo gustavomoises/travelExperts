@@ -497,7 +497,7 @@ public class AddBookingActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart,dateEnd,agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart.toString(),dateEnd.toString(),agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
                             prodPackages.add(prodPackage);
                         }
                     } catch (JSONException e) {

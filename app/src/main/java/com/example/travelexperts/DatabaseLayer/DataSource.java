@@ -519,7 +519,7 @@ public class DataSource {
             e.printStackTrace();
         }
 
-        ProdPackage prodPackage= new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
+        ProdPackage prodPackage= new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate.toString(),pkgEndDate.toString(),cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
         cursor.close();
         return prodPackage;
     }
@@ -544,7 +544,7 @@ public class DataSource {
                 e.printStackTrace();
             }
 
-            packages.add(new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
+            packages.add(new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate.toString(),pkgEndDate.toString(),cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
         }
         cursor.close();
         return  packages;

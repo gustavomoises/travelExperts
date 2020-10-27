@@ -155,21 +155,18 @@ public class PackageDetailsActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 ProdPackage prodPackage = null;
-                try {
+
                     prodPackage = new ProdPackage(
                             Integer.parseInt(etPackageId.getText().toString()),
                             etName.getText().toString(),
-                            sdf.parse(etStartDate.getText().toString()),
-                            sdf.parse(etEndDate.getText().toString()),
+                            etStartDate.getText().toString(),
+                            etEndDate.getText().toString(),
                             etDescription.getText().toString(),
                             Double.parseDouble(etBasePrice.getText().toString()),
                             Double.parseDouble(etCommission.getText().toString())
                     );
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+
                 Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage));
             }
         });

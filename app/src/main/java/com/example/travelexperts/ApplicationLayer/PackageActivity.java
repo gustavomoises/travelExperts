@@ -229,7 +229,7 @@ public class PackageActivity extends AppCompatActivity {
                                 pkgAgency=0;
                             }
 
-                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart, dateEnd, agt.getString("PkgDesc"), pkgPrice, pkgAgency);
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart.toString(), dateEnd.toString(), agt.getString("PkgDesc"), pkgPrice, pkgAgency);
                             adapter.add(prodPackage);
                         }
                     } catch (JSONException e) {

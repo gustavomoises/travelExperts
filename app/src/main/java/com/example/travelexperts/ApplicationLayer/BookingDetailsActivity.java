@@ -503,8 +503,8 @@ public class BookingDetailsActivity extends AppCompatActivity {
                             }
                             prodPackage.setPackageId(agt.getInt("PackageId"));
                             prodPackage.setPkgName(agt.getString("PkgName"));
-                            prodPackage.setPkgStartDate(dateStart);
-                            prodPackage.setPkgEndDate(dateEnd);
+                            prodPackage.setPkgStartDate(dateStart.toString());
+                            prodPackage.setPkgEndDate(dateEnd.toString());
                             prodPackage.setPkgDec(agt.getString("PkgDesc"));
                             prodPackage.setPkgBasePrice(agt.getDouble("PkgBasePrice"));
                             prodPackage.setPkgAgencyCommission(agt.getDouble("PkgAgencyCommission"));

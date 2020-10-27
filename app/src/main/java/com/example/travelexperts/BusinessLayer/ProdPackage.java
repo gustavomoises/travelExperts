@@ -12,8 +12,8 @@ import java.util.Date;
 public class ProdPackage implements Serializable {
     private int packageId;
     private String pkgName;
-    private Date pkgStartDate;
-    private Date pkgEndDate;
+    private String pkgStartDate;
+    private String pkgEndDate;
     private String pkgDec;
     private double pkgBasePrice;
     private double pkgAgencyCommission;
@@ -23,7 +23,7 @@ public class ProdPackage implements Serializable {
     }
 
     //Constructor 7 arguments
-    public ProdPackage(int packageId, String pkgName, Date pkgStartDate, Date pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
+    public ProdPackage(int packageId, String pkgName, String pkgStartDate, String pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
         this.packageId = packageId;
         this.pkgName = pkgName;
         this.pkgStartDate = pkgStartDate;
@@ -50,19 +50,19 @@ public class ProdPackage implements Serializable {
         this.pkgName = pkgName;
     }
 
-    public Date getPkgStartDate() {
+    public String getPkgStartDate() {
         return pkgStartDate;
     }
 
-    public void setPkgStartDate(Date pkgStartDate) {
+    public void setPkgStartDate(String pkgStartDate) {
         this.pkgStartDate = pkgStartDate;
     }
 
-    public Date getPkgEndDate() {
+    public String getPkgEndDate() {
         return pkgEndDate;
     }
 
-    public void setPkgEndDate(Date pkgEndDate) {
+    public void setPkgEndDate(String pkgEndDate) {
         this.pkgEndDate = pkgEndDate;
     }
 
