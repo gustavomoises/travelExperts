@@ -47,56 +47,104 @@ public class PackageDetailsActivity extends AppCompatActivity {
 
     class PutPackage implements Runnable {
         private ProdPackage prodPackage;
+        String mode;
 
-        public PutPackage(ProdPackage prodPackage) {
-            this.prodPackage = prodPackage;
+        public PutPackage(ProdPackage prodPackage, String mode) {
+            this.prodPackage = prodPackage; this.mode = mode;
         }
 
         @Override
         public void run() {
-            //send JSON data to REST service
-            String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/putpackage";
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("packageId", prodPackage.getPackageId() + "");
-                obj.put("packName", prodPackage.getPkgName() + "");
-                obj.put("packStartDate", prodPackage.getPkgStartDate() + "");
-                obj.put("packEndDate", prodPackage.getPkgEndDate() + "");
-                obj.put("packDesc", prodPackage.getPkgDec() + "");
-                obj.put("packPrice", prodPackage.getPkgBasePrice() + "");
-                obj.put("packCommission", prodPackage.getPkgAgencyCommission() + "");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, obj,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            Log.d("harv", "response=" + response);
-                            VolleyLog.wtf(response.toString(), "utf-8");
+            if (!mode.equals("edit")) {
+                //send JSON data to REST service for insert
+                String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/putpackage";
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("packName", prodPackage.getPkgName() + "");
+                    obj.put("packStartDate", prodPackage.getPkgStartDate() + "");
+                    obj.put("packEndDate", prodPackage.getPkgEndDate() + "");
+                    obj.put("packDesc", prodPackage.getPkgDec() + "");
+                    obj.put("packPrice", prodPackage.getPkgBasePrice() + "");
+                    obj.put("packCommission", prodPackage.getPkgAgencyCommission() + "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, obj,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(final JSONObject response) {
+                                Log.d("harv", "response=" + response);
+                                VolleyLog.wtf(response.toString(), "utf-8");
 
-                            //display result message
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                //display result message
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("harv", "error=" + error);
-                            VolleyLog.wtf(error.getMessage(), "utf-8");
-                        }
-                    });
+                                });
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("harv", "error=" + error);
+                                VolleyLog.wtf(error.getMessage(), "utf-8");
+                            }
+                        });
 
-            requestQueue.add(jsonObjectRequest);
+                requestQueue.add(jsonObjectRequest);
+            }
+            else
+            {
+                //send JSON data to REST service for update
+                String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/postpackage";
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("packageId", prodPackage.getPackageId());
+                    obj.put("packName", prodPackage.getPkgName() + "");
+                    obj.put("packStartDate", prodPackage.getPkgStartDate() + "");
+                    obj.put("packEndDate", prodPackage.getPkgEndDate() + "");
+                    obj.put("packDesc", prodPackage.getPkgDec() + "");
+                    obj.put("packPrice", prodPackage.getPkgBasePrice() + "");
+                    obj.put("packCommission", prodPackage.getPkgAgencyCommission() + "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(final JSONObject response) {
+                                Log.d("harv", "response=" + response);
+                                VolleyLog.wtf(response.toString(), "utf-8");
+
+                                //display result message
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("harv", "error=" + error);
+                                VolleyLog.wtf(error.getMessage(), "utf-8");
+                            }
+                        });
+
+                requestQueue.add(jsonObjectRequest);
+            }
         }
     }
 
@@ -111,7 +159,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
         // receives agent from sending activity
         final ProdPackage prodPackage = (ProdPackage) receive.getSerializableExtra("package");
         // receives mode from sending activity
-        String mode = (String) receive.getStringExtra("mode");
+        final String mode = (String) receive.getStringExtra("mode");
         // reference for texts
         etPackageId = findViewById(R.id.etPackageId);
         etCommission = findViewById(R.id.etCommission);
@@ -147,27 +195,77 @@ public class PackageDetailsActivity extends AppCompatActivity {
             etEndDate.setText(prodPackage.getPkgEndDate() + "");
             etName.setText(prodPackage.getPkgName());
             etStartDate.setText(prodPackage.getPkgStartDate() + "");
-            btnConfirm.setVisibility(View.INVISIBLE);
-        }
-        else
             btnConfirm.setVisibility(View.VISIBLE);
+        }
+        else {
+            btnConfirm.setVisibility(View.VISIBLE);
+            etPackageId.setVisibility(View.INVISIBLE);
+        }
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProdPackage prodPackage = null;
 
-                    prodPackage = new ProdPackage(
-                            Integer.parseInt(etPackageId.getText().toString()),
-                            etName.getText().toString(),
-                            etStartDate.getText().toString(),
-                            etEndDate.getText().toString(),
-                            etDescription.getText().toString(),
-                            Double.parseDouble(etBasePrice.getText().toString()),
-                            Double.parseDouble(etCommission.getText().toString())
-                    );
+                // date validation
+                boolean lv_validated = true;
 
-                Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage));
+                try {
+                    java.sql.Date startDate = java.sql.Date.valueOf(etStartDate.getText().toString());
+                    java.sql.Date endDate = java.sql.Date.valueOf(etEndDate.getText().toString());
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Wrong date format", Toast.LENGTH_LONG).show();
+                    lv_validated = false;
+                }
+
+                // numeric validation
+                try {
+                    double price = Double.parseDouble(etBasePrice.getText().toString());
+                    double commission = Double.parseDouble(etCommission.getText().toString());
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Wrong number format", Toast.LENGTH_LONG).show();
+                    lv_validated = false;
+                }
+
+                // blank fields
+                       if ( etName.getText().toString().equals("")  ||
+                            etStartDate.getText().toString().equals("") ||
+                               etEndDate.getText().toString().equals("") ||
+                            etDescription.getText().toString().equals("") ||
+                               etBasePrice.getText().toString().equals("") ||
+                               etCommission.getText().toString().equals(""))
+                       {
+                           Toast.makeText(getApplicationContext(), "Blank field", Toast.LENGTH_LONG).show();
+                           lv_validated = false;
+                       }
+
+                if (lv_validated) {
+                    // if user input is correct, post/put user entry
+                    if (!mode.equals("edit")) {
+                        prodPackage = new ProdPackage(
+                                etName.getText().toString(),
+                                etStartDate.getText().toString(),
+                                etEndDate.getText().toString(),
+                                etDescription.getText().toString(),
+                                Double.parseDouble(etBasePrice.getText().toString()),
+                                Double.parseDouble(etCommission.getText().toString())
+                        );
+                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage, mode));
+                    }
+                    else
+                    {
+                        prodPackage = new ProdPackage(
+                                Integer.parseInt(etPackageId.getText().toString()),
+                                etName.getText().toString(),
+                                etStartDate.getText().toString(),
+                                etEndDate.getText().toString(),
+                                etDescription.getText().toString(),
+                                Double.parseDouble(etBasePrice.getText().toString()),
+                                Double.parseDouble(etCommission.getText().toString())
+                        );
+                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage, mode));
+                    }
+                }
             }
         });
     }

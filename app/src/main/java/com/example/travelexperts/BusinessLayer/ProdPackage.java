@@ -33,6 +33,17 @@ public class ProdPackage implements Serializable {
         this.pkgAgencyCommission = pkgAgencyCommission;
     }
 
+    //Constructor 6 arguments
+    public ProdPackage(String pkgName, String pkgStartDate, String pkgEndDate, String pkgDec, double pkgBasePrice, double pkgAgencyCommission) {
+        this.pkgName = pkgName;
+        this.pkgStartDate = pkgStartDate;
+        this.pkgEndDate = pkgEndDate;
+        this.pkgDec = pkgDec;
+        this.pkgBasePrice = pkgBasePrice;
+        this.pkgAgencyCommission = pkgAgencyCommission;
+    }
+
+
     //Getters and Setters
     public int getPackageId() {
         return packageId;
