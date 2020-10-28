@@ -31,7 +31,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Fee;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import org.json.JSONArray;
@@ -45,7 +44,6 @@ public class AddFeeActivity extends AppCompatActivity {
     SharedPreferences prefs;
     ConstraintLayout clAddFee;
     Button btnAddFeeCancel,btnAddFeeSave, btnAddFeeDelete;
-//    DataSource dataSource;      // LV ???
     String mode;
     Fee fee;
     EditText etAddFeeFeeName, etAddFeeFeeId,etAddFeeFeeDesc,etAddFeeFeeAmt;
@@ -66,8 +64,6 @@ public class AddFeeActivity extends AppCompatActivity {
         etAddFeeFeeName=findViewById(R.id.etAddFeeFeeName);
         etAddFeeFeeAmt=findViewById(R.id.etAddFeeFeeAmt);
         etAddFeeFeeDesc=findViewById(R.id.etAddFeeFeeDesc);
-     //   dataSource = new DataSource(this);
-
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("mode");
@@ -88,10 +84,10 @@ public class AddFeeActivity extends AppCompatActivity {
             etAddFeeFeeId.setText("");
             etAddFeeFeeDesc.setText("");
         }
-        btnAddFeeCancel.setOnClickListener(new View.OnClickListener() {     // LV imported View
+        btnAddFeeCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FeeActivity.class); // LV is this .class correct ?
+                Intent intent = new Intent(getApplicationContext(), FeeActivity.class);
                 startActivity(intent);
 
             }
@@ -106,7 +102,7 @@ public class AddFeeActivity extends AppCompatActivity {
                 else
                 {
                     if (typeId.length()>10)
-                        Toast.makeText(getApplicationContext(), " Maximum of 5 characters is required for the Fee Id", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), " Maximum of 10 characters is required for the Fee Id", Toast.LENGTH_LONG).show();
                     else {
                         Executors.newSingleThreadExecutor().execute(new AddFeeActivity.VerifyFeeId(typeId));
                     }
@@ -120,9 +116,6 @@ public class AddFeeActivity extends AppCompatActivity {
                 Executors.newSingleThreadExecutor().execute(new AddFeeActivity.DeleteFee(fee.getFeeId()));
             }
         });
-//-------------- LV marker
-
-
 
         prefs = getSharedPreferences("myprefs", Context.MODE_PRIVATE);
         String basicColor = prefs.getString("color","White");
@@ -213,7 +206,6 @@ public class AddFeeActivity extends AppCompatActivity {
         }
     }
 
-    // LV new code added here until closing } below
 
     class VerifyFeeId implements Runnable {
         private String typeId;
@@ -226,19 +218,19 @@ public class AddFeeActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/fee/getfees";    // LV URL changed here to fee/getfees. Correct?
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/fee/getfees";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     VolleyLog.wtf(response, "utf-8");
 
-                    //convert JSON data from response string into an ArrayAdapter of Agents   // LV Agents ???
+                    //convert JSON data from response string into an ArrayAdapter of Agents
                     final ArrayList<Fee> fees = new ArrayList<>();
                     try {
                         JSONArray jsonArray = new JSONArray(response);
                         for (int i=0; i<jsonArray.length(); i++)
                         {
-                            JSONObject agt = jsonArray.getJSONObject(i);   // LV line below - added double feeAmt - correct?
+                            JSONObject agt = jsonArray.getJSONObject(i);   // LV should line below be double ?
                             Fee fee = new Fee(agt.getString("FeeId"), agt.getString("FeeName"),agt.getDouble("FeeAmt") ,agt.getString("FeeDesc"));
                             fees.add(fee);
                         }
@@ -250,22 +242,22 @@ public class AddFeeActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            boolean exist = false;
+                            boolean exists = false;
                             int k=0;
                             for (Fee r : fees) {
                                 if (mode.equals("update"))
                                 {
                                     if (r.getFeeId().equals(typeId) && !(fee.getFeeId().equals(typeId)))
-                                        exist = true;
+                                        exists = true;
                                 }
                                 else
                                 {
                                     if (r.getFeeId().equals(typeId))
-                                        exist = true;
+                                        exists = true;
                                 }
 
                             }
-                            if (exist)
+                            if (exists)
                                 Toast.makeText(getApplicationContext(), " Id associated to another fee. Please, choose another Id!!!", Toast.LENGTH_LONG).show();
                             else {
                                 fee.setFeeName(etAddFeeFeeName.getText() + "");
@@ -310,6 +302,7 @@ public class AddFeeActivity extends AppCompatActivity {
             try {
                 obj.put("FeeId", fee.getFeeId()+ "");
                 obj.put("FeeName", fee.getFeeName() + "");
+                obj.put("FeeAmt", fee.getFeeAmt() + "");      // LV should this be modified - decimal?
                 obj.put("FeeDesc", fee.getFeeDesc() + "");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -405,7 +398,7 @@ public class AddFeeActivity extends AppCompatActivity {
             try {
                 obj.put("FeeId", fee.getFeeId() + "");
                 obj.put("FeeName", fee.getFeeName() + "");
-                obj.put("FeeAmt", fee.getFeeAmt() + "");     // LV I added this line
+                obj.put("FeeAmt", fee.getFeeAmt() + "");     // LV I added this line. ?? Decimal OK ?
                 obj.put("FeeDesc", fee.getFeeDesc() + "");
             } catch (JSONException e) {
                 e.printStackTrace();
