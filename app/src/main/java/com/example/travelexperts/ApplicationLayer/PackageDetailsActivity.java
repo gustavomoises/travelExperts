@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.R;
@@ -43,21 +44,21 @@ public class PackageDetailsActivity extends AppCompatActivity {
     EditText etPackageId, etCommission, etBasePrice, etDescription, etEndDate, etName, etStartDate;
     TextView lbId;
     SharedPreferences prefs;
-    Button btnConfirm;
+    Button btnConfirm, btnDelete;
     ConstraintLayout clPackage;
     RequestQueue requestQueue;
 
-    class PutPackage implements Runnable {
+    class PutPostDeletePackage implements Runnable {
         private ProdPackage prodPackage;
         String mode;
 
-        public PutPackage(ProdPackage prodPackage, String mode) {
+        public PutPostDeletePackage(ProdPackage prodPackage, String mode) {
             this.prodPackage = prodPackage; this.mode = mode;
         }
 
         @Override
         public void run() {
-            if (!mode.equals("edit")) {
+            if (mode.equals("add")) {
                 //send JSON data to REST service for insert
                 String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/putpackage";
                 JSONObject obj = new JSONObject();
@@ -100,6 +101,33 @@ public class PackageDetailsActivity extends AppCompatActivity {
                         });
 
                 requestQueue.add(jsonObjectRequest);
+            }
+            else if (mode.equals("delete"))
+            {
+                String packageId = etPackageId.getText().toString();
+                StringBuffer buffer = new StringBuffer();
+                String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/deletepackage/" + packageId;
+                StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        VolleyLog.wtf(response, "utf-8");
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.wtf(error.getMessage(), "utf-8");
+                    }
+                });
+
+                requestQueue.add(stringRequest);
+
             }
             else
             {
@@ -171,6 +199,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etStartDate = findViewById(R.id.etStartDate);
         btnConfirm = findViewById(R.id.btnConfirm);
+        btnDelete = findViewById(R.id.btnDelete);
         lbId = findViewById(R.id.lbId);
 
 
@@ -217,14 +246,35 @@ public class PackageDetailsActivity extends AppCompatActivity {
             etStartDate.setText(startDateStr);
             // enable confirm button
             btnConfirm.setVisibility(View.VISIBLE);
+            // enable delete button (edit mode includes deletion case)
+            btnDelete.setVisibility(View.VISIBLE);
         }
         else {
             // enable confirm button
             btnConfirm.setVisibility(View.VISIBLE);
+            // disable delete button
+            btnDelete.setVisibility(View.INVISIBLE);
             // disable Id field since populated in database (autoincrement enabled in database)
             etPackageId.setVisibility(View.INVISIBLE);
             lbId.setVisibility(View.INVISIBLE);
         }
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            // button enabled in edit case which includes deletion
+            String mode = "delete";
+            public void onClick(View v) {
+                ProdPackage prodPackage = new ProdPackage(
+                        etName.getText().toString(),
+                        etStartDate.getText().toString(),
+                        etEndDate.getText().toString(),
+                        etDescription.getText().toString(),
+                        Double.parseDouble(etBasePrice.getText().toString()),
+                        Double.parseDouble(etCommission.getText().toString()));
+
+                Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPostDeletePackage(prodPackage, mode));
+
+            }
+        });
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,7 +330,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
                                 Double.parseDouble(etBasePrice.getText().toString()),
                                 Double.parseDouble(etCommission.getText().toString())
                         );
-                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage, mode));
+                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPostDeletePackage(prodPackage, mode));
                     }
                     else
                     {
@@ -293,7 +343,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
                                 Double.parseDouble(etBasePrice.getText().toString()),
                                 Double.parseDouble(etCommission.getText().toString())
                         );
-                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPackage(prodPackage, mode));
+                        Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPostDeletePackage(prodPackage, mode));
                     }
                 }
             }

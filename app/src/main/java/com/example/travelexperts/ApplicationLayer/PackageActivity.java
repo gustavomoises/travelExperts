@@ -51,6 +51,7 @@ public class PackageActivity extends AppCompatActivity {
     ConstraintLayout clPackage;
     ListView lvPackageList;
     Button btnAddPackage;
+    Button btnRefresh;
     RequestQueue requestQueue;
 
 
@@ -62,9 +63,16 @@ public class PackageActivity extends AppCompatActivity {
 
         lvPackageList = findViewById(R.id.lvPackageList);
         btnAddPackage = findViewById(R.id.btnAddPackage);
+        btnRefresh = findViewById(R.id.btnRefresh);
 
         Executors.newSingleThreadExecutor().execute(new PackageActivity.GetPackages());
 
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Executors.newSingleThreadExecutor().execute(new PackageActivity.GetPackages());
+            }
+        });
 
         btnAddPackage.setOnClickListener(new View.OnClickListener() {
             @Override
