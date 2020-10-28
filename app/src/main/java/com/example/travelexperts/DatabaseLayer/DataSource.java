@@ -847,6 +847,22 @@ public class DataSource {
         return  suppliers;
     }
 
+    //Get Suppliers without certain Product //By Suvanjan Shrestha
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsupplierswithoutproduct/{ productId }
+    public ArrayList<Supplier> getSuppliersWithoutProduct(int productId)
+    {
+        ArrayList<Supplier> suppliers = new ArrayList<>();
+        String MY_QUERY = "SELECT s.SupplierId, s.SupName FROM Products_suppliers ps INNER JOIN Suppliers s ON ps.SupplierId=s.SupplierId WHERE ps.ProductId<>? ORDER BY s.SupName";
+        String [] args = {productId+ ""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        while (cursor.moveToNext())
+        {
+            suppliers.add(new Supplier(cursor.getInt(0),cursor.getString(1)));
+        }
+        cursor.close();
+        return  suppliers;
+    }
+
     //TRIP TYPE--------------------------------------------------------------------------------------------------------------------------
 
     //Update Trip Type in the database
