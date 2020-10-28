@@ -74,6 +74,7 @@ public class AddFeeActivity extends AppCompatActivity {
             assert fee != null;
             etAddFeeFeeName.setText(fee.getFeeName()==null?"":String.format("%s", fee.getFeeName()));
             etAddFeeFeeId.setText(String.format("%s", fee.getFeeId()));
+            etAddFeeFeeAmt.setText(String.format("%s", fee.getFeeAmt()));        // LV fee amount to be added here. Correct ??
             etAddFeeFeeDesc.setText(fee.getFeeDesc()==null?"":String.format("%s", fee.getFeeDesc()));
         }
         else
