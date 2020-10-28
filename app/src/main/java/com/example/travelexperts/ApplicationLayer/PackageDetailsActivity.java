@@ -104,9 +104,9 @@ public class PackageDetailsActivity extends AppCompatActivity {
             }
             else if (mode.equals("delete"))
             {
-                String packageId = etPackageId.getText().toString();
+                String packageIdStr = prodPackage.getPackageId()+"";
                 StringBuffer buffer = new StringBuffer();
-                String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/deletepackage/" + packageId;
+                String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/deletepackage/" + packageIdStr;
                 StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -260,10 +260,12 @@ public class PackageDetailsActivity extends AppCompatActivity {
         }
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
-            // button enabled in edit case which includes deletion
+            // button enabled in edit case which includes deletion as "editing" activity
             String mode = "delete";
+            // convert user input into package object
             public void onClick(View v) {
                 ProdPackage prodPackage = new ProdPackage(
+                        Integer.parseInt(etPackageId.getText().toString()),
                         etName.getText().toString(),
                         etStartDate.getText().toString(),
                         etEndDate.getText().toString(),
@@ -273,6 +275,9 @@ public class PackageDetailsActivity extends AppCompatActivity {
 
                 Executors.newSingleThreadExecutor().execute(new PackageDetailsActivity.PutPostDeletePackage(prodPackage, mode));
 
+                // navigate back to main view with all the packages
+                Intent intent = new Intent(getApplicationContext(), PackageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -320,8 +325,9 @@ public class PackageDetailsActivity extends AppCompatActivity {
                 }
 
                 if (lv_validated) {
-                    // if user input is correct, post/put user entry
+                    // if user input is correct, convert user input into package object
                     if (!mode.equals("edit")) {
+                        // adding mode (id constructor field cannot be populated since auto-incremented)
                         prodPackage = new ProdPackage(
                                 etName.getText().toString(),
                                 etStartDate.getText().toString(),
@@ -334,6 +340,7 @@ public class PackageDetailsActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        //editing mode (id constructor field can be populated)
                         prodPackage = new ProdPackage(
                                 Integer.parseInt(etPackageId.getText().toString()),
                                 etName.getText().toString(),
