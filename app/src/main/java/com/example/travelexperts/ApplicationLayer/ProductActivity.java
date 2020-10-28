@@ -1,10 +1,12 @@
 package com.example.travelexperts.ApplicationLayer;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,14 +15,28 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Listener;
 import com.example.travelexperts.BusinessLayer.ProductAdapter;
+import com.example.travelexperts.BusinessLayer.RecyclerViewData;
 import com.example.travelexperts.DatabaseLayer.DBHelper;
 import com.example.travelexperts.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Author: Suvanjan Shrestha
@@ -31,11 +47,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class ProductActivity extends AppCompatActivity implements Listener {
     SharedPreferences prefs;
     RelativeLayout rlProduct;
-    RecyclerView recyclerView;
-    ProductAdapter productAdapter;
     FloatingActionButton fab;
     DBHelper dbHelper;
-    
+    List<RecyclerViewData> dataList;
+    RecyclerView mList;
+    ProductAdapter adapter;
+    DividerItemDecoration dividerItemDecoration;
+    LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +64,18 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         fab = findViewById(R.id.fab);
         dbHelper = DBHelper.getInstance(getApplicationContext());
 
-        recyclerView = findViewById(R.id.recyclerView);
-        productAdapter = new ProductAdapter(this, dbHelper.getAllProducts());
-        recyclerView.setAdapter(productAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mList = findViewById(R.id.recyclerView);
+        dataList = new ArrayList<>();
+        adapter = new ProductAdapter(getApplicationContext(), dataList);
 
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        dividerItemDecoration = new DividerItemDecoration(mList.getContext(), linearLayoutManager.getOrientation());
+
+        mList.setHasFixedSize(true);
+        mList.setLayoutManager(linearLayoutManager);
+        mList.addItemDecoration(dividerItemDecoration);
+        mList.setAdapter(adapter);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +83,8 @@ public class ProductActivity extends AppCompatActivity implements Listener {
                 addItem();
             }
         });
+
+        getData();
 
 
         //Set background color form Settings
@@ -148,6 +175,47 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         }
     }
 
+
+    //fetch data from server
+    private void getData() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        String url = "http://192.168.0.23:8081/JSPDay3RESTExample/rs/getproductsandsuppliers";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        RecyclerViewData recyclerViewData = new RecyclerViewData();
+                        recyclerViewData.setProductSupplierId(jsonObject.getInt("ProductSupplierId"));
+                        recyclerViewData.setProdName(jsonObject.getString("ProdName"));
+                        recyclerViewData.setSupName(jsonObject.getString("SupName"));
+
+                        dataList.add(recyclerViewData);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        progressDialog.dismiss();
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", error.toString());
+                progressDialog.dismiss();
+            }
+
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
     //Intent to go to next activity
     public void addItem(){
         Intent intent = new Intent(this, AddProductActivity.class);
@@ -158,6 +226,5 @@ public class ProductActivity extends AppCompatActivity implements Listener {
 
     @Override
     public void nameToChange(String name) {
-
     }
 }
