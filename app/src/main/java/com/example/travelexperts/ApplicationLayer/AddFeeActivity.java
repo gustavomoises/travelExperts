@@ -43,7 +43,7 @@ public class AddFeeActivity extends AppCompatActivity {
         btnAddFeeSave=findViewById(R.id.btnAddFeeSave);
         etAddFeeFeeId=findViewById(R.id.etAddFeeFeeId);
         etAddFeeFeeName=findViewById(R.id.etAddFeeFeeName);
-        etAddFeeFeeAmt=findViewById(R.id.etAddFeeFeeAmount);
+        etAddFeeFeeAmt=findViewById(R.id.etAddFeeFeeAmt);
         etAddFeeFeeDesc=findViewById(R.id.etAddFeeFeeDesc);
         dataSource = new DataSource(this);
 

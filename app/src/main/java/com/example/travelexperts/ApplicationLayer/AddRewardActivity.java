@@ -217,7 +217,7 @@ public class AddRewardActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/reward/newreward";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/reward/newreward";
             //New Request
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
@@ -260,7 +260,7 @@ public class AddRewardActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/reward/putreward";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/reward/putreward";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("RewardId", reward.getRewardId() + "");
@@ -319,7 +319,7 @@ public class AddRewardActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/reward/postreward";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/reward/postreward";
             //new JSON object
             JSONObject obj = new JSONObject();
             try {
@@ -376,7 +376,7 @@ public class AddRewardActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/reward/deletereward/" + rewardId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/reward/deletereward/" + rewardId;
             //New Request
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override

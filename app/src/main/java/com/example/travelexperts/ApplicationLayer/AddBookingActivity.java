@@ -338,7 +338,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/triptype/gettriptypes";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/triptype/gettriptypes";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -402,7 +402,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/customer/getcustomers";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/customer/getcustomers";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -468,7 +468,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/package/getpackages";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/package/getpackages";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -498,7 +498,7 @@ public class AddBookingActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart,dateEnd,agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"),agt.getString("PkgName"),dateStart.toString(),dateEnd.toString(),agt.getString("PkgDesc"),agt.getDouble("PkgBasePrice"),agt.getDouble("PkgAgencyCommission"));
                             prodPackages.add(prodPackage);
                         }
                     } catch (JSONException e) {
@@ -550,7 +550,7 @@ public class AddBookingActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/booking/postbooking";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/booking/postbooking";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("BookingNo", booking.getBookingNo()+"");
@@ -611,7 +611,7 @@ public class AddBookingActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/booking/putbooking";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/booking/putbooking";
             Date date;
             Date currentDate = Calendar.getInstance().getTime();
             booking.setBookingDate(currentDate);
@@ -714,7 +714,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/booking/deletebooking/" + bookingId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/booking/deletebooking/" + bookingId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
@@ -755,7 +755,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/booking/findBookingIdByBookingNo/"+bookingNo;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/booking/findBookingIdByBookingNo/"+bookingNo;
             //New Request
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
@@ -799,7 +799,7 @@ public class AddBookingActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/bookingdetail/getbookingdetailsbybookingid/"+bookingId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/bookingdetail/getbookingdetailsbybookingid/"+bookingId;
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

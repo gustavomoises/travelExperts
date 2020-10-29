@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import com.example.travelexperts.BusinessLayer.ProdPackage;
 import com.example.travelexperts.R;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +51,7 @@ public class PackageActivity extends AppCompatActivity {
     ConstraintLayout clPackage;
     ListView lvPackageList;
     Button btnAddPackage;
+    Button btnRefresh;
     RequestQueue requestQueue;
 
 
@@ -61,9 +63,16 @@ public class PackageActivity extends AppCompatActivity {
 
         lvPackageList = findViewById(R.id.lvPackageList);
         btnAddPackage = findViewById(R.id.btnAddPackage);
+        btnRefresh = findViewById(R.id.btnRefresh);
 
         Executors.newSingleThreadExecutor().execute(new PackageActivity.GetPackages());
 
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Executors.newSingleThreadExecutor().execute(new PackageActivity.GetPackages());
+            }
+        });
 
         btnAddPackage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +94,7 @@ public class PackageActivity extends AppCompatActivity {
                 // intent to initialize another activity
                 Intent intent = new Intent(getApplicationContext(), PackageDetailsActivity.class);
                 // make it available for new activity
-                intent.putExtra("package", prodPackage);
+                intent.putExtra("package", (Serializable) prodPackage);
                 // set mode for new activity
                 intent.putExtra("mode", "edit");
                 // launch it
@@ -181,12 +190,13 @@ public class PackageActivity extends AppCompatActivity {
                 break;
         }
     }
+
     class GetPackages implements Runnable {
         @Override
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/package/getpackages";
+            String url = "http://192.168.1.71:8080/JSPDay3RESTExample/rs/package/getpackages";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -209,7 +219,7 @@ public class PackageActivity extends AppCompatActivity {
 
                             Date dateEnd =new Date();
                             try {
-                                dateStart = dateFormat.parse(agt.getString("PkgEndDate"));
+                                dateEnd = dateFormat.parse(agt.getString("PkgEndDate"));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -227,7 +237,7 @@ public class PackageActivity extends AppCompatActivity {
                                 pkgAgency=0;
                             }
 
-                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart, dateEnd, agt.getString("PkgDesc"), pkgPrice, pkgAgency);
+                            ProdPackage prodPackage = new ProdPackage(agt.getInt("PackageId"), agt.getString("PkgName"), dateStart.toString(), dateEnd.toString(), agt.getString("PkgDesc"), pkgPrice, pkgAgency);
                             adapter.add(prodPackage);
                         }
                     } catch (JSONException e) {

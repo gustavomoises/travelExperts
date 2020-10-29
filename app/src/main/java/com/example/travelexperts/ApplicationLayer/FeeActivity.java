@@ -174,7 +174,7 @@ public class FeeActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/fee/getfees";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/fee/getfees";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {

@@ -6,7 +6,6 @@
 
 package com.example.travelexperts.DatabaseLayer;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -15,7 +14,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.travelexperts.BusinessLayer.Product;
 import com.example.travelexperts.BusinessLayer.RecyclerViewData;
@@ -25,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final int version = 1;
@@ -123,7 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    //function to insert Product    //By Suvanjan Shrestha
+    /*//function to insert Product    //By Suvanjan Shrestha
     public void insertProduct(Product product){
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -140,10 +139,10 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-    }
+    }*/
 
     //function to view Products    //By Suvanjan Shrestha
-    public List<RecyclerViewData> getAllProducts(){
+    public List<RecyclerViewData> getAllData(){
         List<RecyclerViewData> dataList = new ArrayList<>();
         String QUERY = "SELECT ps.ProductSupplierId, ps.ProductId, ps.SupplierId, p.ProdName, s.SupName\n" +
                 "FROM Products p\n" +
@@ -151,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "ON p.ProductId = ps.ProductId\n" +
                 "INNER JOIN Suppliers s\n" +
                 "ON ps.SupplierId = s.SupplierId\n" +
-                "Order By ps.ProductSupplierId";
+                "Order By p.prodName";
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY, null);
@@ -197,10 +196,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<Supplier> getAllSuppliers(){
+    public List<Supplier> getSuppliersByProd(int productId){
         List<Supplier> supplierList = new ArrayList<>();
 
-        String QUERY = "SELECT * FROM Suppliers";
+        String QUERY = "SELECT SupName, SupplierId FROM Suppliers WHERE SupplierId NOT IN(SELECT ps.SupplierId \n" +
+                "FROM Products_Suppliers ps INNER JOIN Suppliers s ON ps.SupplierId = s.SupplierId WHERE ps.ProductId="+productId+")Order By SupName";
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(QUERY, null);
@@ -224,4 +224,106 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return supplierList;
     }
+
+    public List<Supplier> getAllSuppliers(){
+        List<Supplier> supplierList = new ArrayList<>();
+
+        String QUERY = "Select * from Suppliers Order by SupName";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Supplier supplier = new Supplier();
+                    supplier.SupName = cursor.getString(cursor.getColumnIndex(SUPNAME));
+                    supplier.SupplierId = cursor.getInt(cursor.getColumnIndex(SUPPLIER_ID));
+                    supplierList.add(supplier);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to get data from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return supplierList;
+    }
+
+    public List<Product> getAllProducts(){
+        List<Product> productList = new ArrayList<>();
+
+        String QUERY = "SELECT * FROM Products";
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(QUERY, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    Product product = new Product();
+                    product.ProdName = cursor.getString(cursor.getColumnIndex(PRODUCT_NAME));
+                    product.ProductId = cursor.getInt(cursor.getColumnIndex(PRODUCT_ID));
+                    productList.add(product);
+
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to get data from database");
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return productList;
+    }
+
+    /*class RecyclerData implements Runnable {
+
+        @Override
+        public void run() {
+            //retrieve JSON data from REST service into StringBuffer
+            StringBuffer buffer = new StringBuffer();
+            String url = "http://localhost:8081/JSPDay3RESTExample/rs/getproductsandsuppliers";
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    VolleyLog.wtf(response, "utf-8");
+
+                    //convert JSON data from response string into an ArrayAdapter of Agents
+                    final ArrayList<RecyclerViewData> recyclerViewData = new ArrayList<>();
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i<jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            RecyclerViewData recyclerViewData1 = new RecyclerViewData(jsonObject.getInt("ProductSupplierId"), jsonObject.getInt("ProductId"),jsonObject.getInt("SupplierId"),jsonObject.getString("ProdName"),jsonObject.getString("SupName"));
+                            recyclerViewData.add(recyclerViewData1);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //display result message
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            for (RecyclerViewData tt: recyclerViewData)
+                                .setText(tt.getCustFirstName()+" "+tt.getCustLastName());
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.wtf(error.getMessage(), "utf-8");
+                }
+            });
+
+            requestQueue.add(stringRequest);
+        }
+    }*/
 }

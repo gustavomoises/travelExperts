@@ -210,7 +210,7 @@ public class AddTripTypeActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/triptype/gettriptypes";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/triptype/gettriptypes";
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -291,7 +291,7 @@ public class AddTripTypeActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/tritype/posttriptype/"+oldTripTypeId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/tritype/posttriptype/"+oldTripTypeId;
             JSONObject obj = new JSONObject();
             try {
                 obj.put("TripTypeId", tripType.getTripTypeId()+ "");
@@ -346,7 +346,7 @@ public class AddTripTypeActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/triptype/puttriptype";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/triptype/puttriptype";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("TripTypeId", tripType.getTripTypeId() + "");
@@ -403,7 +403,7 @@ public class AddTripTypeActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/triptype/deletetriptype/" + tripTypeId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/triptype/deletetriptype/" + tripTypeId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {

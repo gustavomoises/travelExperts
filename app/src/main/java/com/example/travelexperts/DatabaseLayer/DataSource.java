@@ -519,7 +519,7 @@ public class DataSource {
             e.printStackTrace();
         }
 
-        ProdPackage prodPackage= new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
+        ProdPackage prodPackage= new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate.toString(),pkgEndDate.toString(),cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)) ;
         cursor.close();
         return prodPackage;
     }
@@ -544,7 +544,7 @@ public class DataSource {
                 e.printStackTrace();
             }
 
-            packages.add(new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate,pkgEndDate,cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
+            packages.add(new ProdPackage(cursor.getInt(0),cursor.getString(1),pkgStartDate.toString(),pkgEndDate.toString(),cursor.getString(4),cursor.getDouble(5),cursor.getDouble(6)));
         }
         cursor.close();
         return  packages;
@@ -837,6 +837,22 @@ public class DataSource {
     {
         ArrayList<Supplier> suppliers = new ArrayList<>();
         String MY_QUERY = "SELECT DISTINCT b.SupplierId, b.SupName FROM Products_suppliers a INNER JOIN Suppliers  b ON a.SupplierId=b.SupplierId WHERE a.ProductId=? ORDER BY b.SupName";
+        String [] args = {productId+ ""};
+        Cursor cursor =  db.rawQuery(MY_QUERY,args);
+        while (cursor.moveToNext())
+        {
+            suppliers.add(new Supplier(cursor.getInt(0),cursor.getString(1)));
+        }
+        cursor.close();
+        return  suppliers;
+    }
+
+    //Get Suppliers without certain Product //By Suvanjan Shrestha
+    // http://localhost:8080/JSPDay3RESTExample/rs/supplier/getsupplierswithoutproduct/{ productId }
+    public ArrayList<Supplier> getSuppliersWithoutProduct(int productId)
+    {
+        ArrayList<Supplier> suppliers = new ArrayList<>();
+        String MY_QUERY = "SELECT s.SupplierId, s.SupName FROM Products_suppliers ps INNER JOIN Suppliers s ON ps.SupplierId=s.SupplierId WHERE ps.ProductId<>? ORDER BY s.SupName";
         String [] args = {productId+ ""};
         Cursor cursor =  db.rawQuery(MY_QUERY,args);
         while (cursor.moveToNext())

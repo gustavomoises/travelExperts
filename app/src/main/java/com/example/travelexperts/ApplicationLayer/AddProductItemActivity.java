@@ -6,10 +6,6 @@
 //
 package com.example.travelexperts.ApplicationLayer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,8 +33,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Product;
-import com.example.travelexperts.BusinessLayer.Supplier;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import org.json.JSONException;
@@ -205,7 +203,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/postproduct";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/product/postproduct";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ProductId", product.getProductId()+ "");
@@ -260,7 +258,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         @Override
         public void run() {
             //send JSON data to REST service
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/putproduct";
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/product/putproduct";
             JSONObject obj = new JSONObject();
             try {
                 obj.put("ProdName", product.getProdName()+ "");
@@ -316,7 +314,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         public void run() {
             //retrieve JSON data from REST service into StringBuffer
             StringBuffer buffer = new StringBuffer();
-            String url = "http://192.168.1.81:8080/JSPDay3RESTExample/rs/product/deleteproduct/" + productId;
+            String url = "http://10.0.1.33:8081/JSPDay3RESTExample/rs/product/deleteproduct/" + productId;
             StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(final String response) {
