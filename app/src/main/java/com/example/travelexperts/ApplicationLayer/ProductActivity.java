@@ -113,6 +113,15 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    protected void onRestart() {
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
+        super.onRestart();
+    }
+
     //Go to selected menu item
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -178,11 +187,7 @@ public class ProductActivity extends AppCompatActivity implements Listener {
 
     //fetch data from server
     private void getData() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-        String url = "http://192.168.0.23:8081/JSPDay3RESTExample/rs/getproductsandsuppliers";
+        String url = "http://192.168.0.22:8081/JSPDay3RESTExample/rs/getproductsandsuppliers";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -198,17 +203,17 @@ public class ProductActivity extends AppCompatActivity implements Listener {
                         dataList.add(recyclerViewData);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        progressDialog.dismiss();
+
                     }
                 }
                 adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley", error.toString());
-                progressDialog.dismiss();
+
             }
 
         });

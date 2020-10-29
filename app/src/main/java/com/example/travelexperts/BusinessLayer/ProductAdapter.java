@@ -26,7 +26,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private Context context;
     List<RecyclerViewData> dataList;
-    //LayoutInflater inflater;
+    LayoutInflater inflater;
     //Listener listener;
 
 
@@ -34,7 +34,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.context = context;
         this.dataList = dataList;
         //this.listener = (Listener) context;
-        //inflater = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
     }
 
     //View holder for the Products recycler view
