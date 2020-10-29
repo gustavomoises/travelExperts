@@ -1,5 +1,6 @@
 package com.example.travelexperts.ApplicationLayer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,18 +11,19 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Product;
-import com.example.travelexperts.BusinessLayer.RecyclerViewData;
 import com.example.travelexperts.BusinessLayer.Supplier;
 import com.example.travelexperts.DatabaseLayer.DBHelper;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,28 +44,28 @@ public class AddProductActivity extends AppCompatActivity{
     private Spinner selectProduct;
     private Spinner selectSupplier;
     private ImageButton btnSaveProduct;
-    DataSource dataSource;
     Product product;
     Supplier supplier;
     DBHelper dbHelper;
-    RecyclerViewData recyclerViewData;
     List<Product> productList;
     ArrayAdapter<Product> productArrayAdapter;
     List<Supplier> supplierList;
     ArrayAdapter<Supplier> supplierArrayAdapter;
-    int pId;
+    int pId, sId;
+    RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+        queue = Volley.newRequestQueue(getApplicationContext());
 
         //adding the back button in the activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setTitle("Add Product");
 
-        dbHelper = DBHelper.getInstance(getApplicationContext());
+        //dbHelper = DBHelper.getInstance(getApplicationContext());
 
         productList = new ArrayList<>();
         supplierList = new ArrayList<>();
@@ -72,24 +74,12 @@ public class AddProductActivity extends AppCompatActivity{
         getProductData();
 
         btnSaveProduct = findViewById(R.id.btnSaveProduct);
-
-
-        /*selectProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                product = productList.get(position);
-
-                pId = product.getProductId();
-                Log.d("pos", "pId "+pId);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });*/
-
         selectSupplier = findViewById(R.id.spinnerSelectSupplier);
-        //getPId();
+
+        // Creating adapter for spinner
+        supplierArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, supplierList);
+        selectSupplier.setAdapter(supplierArrayAdapter);
+
 
         if (getPId()==0){
             selectSupplier.setEnabled(false);
@@ -98,25 +88,26 @@ public class AddProductActivity extends AppCompatActivity{
             getSupplierData(getPId());
         }
 
+        //getSId();
+        selectSupplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                supplier = supplierList.get(position);
+
+                sId = supplier.getSupplierId();
+                Log.d("pos", "sId "+ sId);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         btnSaveProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Product product = new Product();
-
-                /*if (!etProductName.getText().toString().isEmpty()){
-                    product.ProdName = etProductName.getText().toString();
-                } else {
-                    product.ProdName = "";
-                }*/
-
-                //dbHelper.insertProduct(product);
-
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Product Added", Snackbar.LENGTH_SHORT);
-                snackbar.show();
-
-                //Intent intent=new Intent(AddProductActivity.this, ProductActivity.class);
-                //startActivity(intent);
+                insertData(getPId(),getSId());
+                Restart();
             }
         });
     }
@@ -126,6 +117,29 @@ public class AddProductActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         onBackPressed();
         return true;
+    }
+
+    public void Restart()
+    {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Data Added Successfully!!");
+        dialog.setMessage("Do you want to add another data?");
+        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
+            }
+        });
+        dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        dialog.show();
     }
 
     //fetch Products data from server
@@ -138,10 +152,11 @@ public class AddProductActivity extends AppCompatActivity{
         // Drop down layout
         productArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        String url = "http://192.168.0.23:8081/JSPDay3RESTExample/rs/product/getproducts";
+        String url = "http://192.168.0.22:8081/JSPDay3RESTExample/rs/product/getproducts";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
@@ -175,13 +190,10 @@ public class AddProductActivity extends AppCompatActivity{
     private void getSupplierData(int prodId) {
         dbHelper = new DBHelper(getApplicationContext());
 
-        // Creating adapter for spinner
-        supplierArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, supplierList);
-
         // Drop down layout
         supplierArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Log.d("pos", "sup "+ prodId);
-        String url = "http://192.168.0.23:8081/JSPDay3RESTExample/rs/supplier/getsupplierswithoutproduct/"+prodId;
+        String url = "http://192.168.0.22:8081/JSPDay3RESTExample/rs/supplier/getsupplierswithoutproduct/"+prodId;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -239,9 +251,64 @@ public class AddProductActivity extends AppCompatActivity{
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         return pId;
     }
 
+    private int getSId(){
+        selectSupplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                supplier = supplierList.get(position);
+
+                sId = supplier.getSupplierId();
+                Log.d("pos", "sId "+ sId);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        return sId;
+    }
+
+    //fetch Suppliers data from server
+    private void insertData(final int prodId, final int supId) {
+        getSId();
+        //dbHelper = new DBHelper(getApplicationContext());
+
+        Log.d("pos", prodId +" " + supId);
+
+        String url = "http://192.168.0.22:8081/JSPDay3RESTExample/rs/productssuppliers/putproductsandsuppliers";
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("ProductId", String.valueOf(prodId));
+            object.put("SupplierId", String.valueOf(supId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, url, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Data Added", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Data Not Added", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+                    }
+                });
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(jsonObjectRequest);
+    }
 }
