@@ -3,11 +3,8 @@
 //OOSD Program Spring 2020
 //Date:9/30/2020
 //Travel Agency Application
+//
 package com.example.travelexperts.ApplicationLayer;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -32,8 +33,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.travelexperts.BusinessLayer.Product;
-import com.example.travelexperts.BusinessLayer.Supplier;
-import com.example.travelexperts.DatabaseLayer.DataSource;
 import com.example.travelexperts.R;
 
 import org.json.JSONException;
