@@ -72,9 +72,9 @@ public class AddFeeActivity extends AppCompatActivity {
             btnAddFeeDelete.setEnabled(true);
             fee = (Fee) intent.getSerializableExtra("Fee");
             assert fee != null;
-            etAddFeeFeeName.setText(fee.getFeeName()==null?"":String.format("%s", fee.getFeeName()));
+            etAddFeeFeeName.setText(fee.getFeeName()==null?"":String.format("%s", fee.getFeeName()));   // "$ %.2f"String.format(,bd.getBasePrice()
             etAddFeeFeeId.setText(String.format("%s", fee.getFeeId()));
-            etAddFeeFeeAmt.setText(String.format("%s", fee.getFeeAmt()));        // LV fee amount to be added here. Correct ??
+            etAddFeeFeeAmt.setText(String.format("%.2f", fee.getFeeAmt()));        // LV fee amount to be added here. Correct ??
             etAddFeeFeeDesc.setText(fee.getFeeDesc()==null?"":String.format("%s", fee.getFeeDesc()));
         }
         else
@@ -263,6 +263,7 @@ public class AddFeeActivity extends AppCompatActivity {
                             else {
                                 fee.setFeeName(etAddFeeFeeName.getText() + "");
                                 fee.setFeeDesc(etAddFeeFeeDesc.getText() + "");
+                                fee.setFeeAmt(Double.parseDouble(etAddFeeFeeAmt.getText() + ""));
                                 String oldFeeId=fee.getFeeId();
                                 fee.setFeeId(typeId);
 
