@@ -1,6 +1,5 @@
 package com.example.travelexperts.ApplicationLayer;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +47,6 @@ public class ProductActivity extends AppCompatActivity implements Listener {
     SharedPreferences prefs;
     RelativeLayout rlProduct;
     FloatingActionButton fab;
-    DBHelper dbHelper;
     List<RecyclerViewData> dataList;
     RecyclerView mList;
     ProductAdapter adapter;
@@ -62,8 +60,6 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         setTitle("Products");
 
         fab = findViewById(R.id.fab);
-        dbHelper = DBHelper.getInstance(getApplicationContext());
-
         mList = findViewById(R.id.recyclerView);
         dataList = new ArrayList<>();
         adapter = new ProductAdapter(getApplicationContext(), dataList);
@@ -77,6 +73,7 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         mList.addItemDecoration(dividerItemDecoration);
         mList.setAdapter(adapter);
 
+        //On button Click
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,8 +81,8 @@ public class ProductActivity extends AppCompatActivity implements Listener {
             }
         });
 
+        //get data for recycler view
         getData();
-
 
         //Set background color form Settings
         rlProduct = findViewById(R.id.rlProduct);
@@ -113,6 +110,7 @@ public class ProductActivity extends AppCompatActivity implements Listener {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Restart the activity and data
     @Override
     protected void onRestart() {
         finish();
@@ -225,7 +223,6 @@ public class ProductActivity extends AppCompatActivity implements Listener {
     public void addItem(){
         Intent intent = new Intent(this, AddProductActivity.class);
         startActivity(intent);
-        //productAdapter.swapCursor(getAllProducts());
     }
 
 

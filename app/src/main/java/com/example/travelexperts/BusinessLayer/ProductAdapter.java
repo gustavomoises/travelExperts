@@ -1,7 +1,6 @@
 package com.example.travelexperts.BusinessLayer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.travelexperts.ApplicationLayer.AddProductActivity;
 import com.example.travelexperts.R;
 
 import java.util.List;
@@ -27,13 +25,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private Context context;
     List<RecyclerViewData> dataList;
     LayoutInflater inflater;
-    //Listener listener;
-
 
     public ProductAdapter(Context context, List<RecyclerViewData> dataList){
         this.context = context;
         this.dataList = dataList;
-        //this.listener = (Listener) context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -61,24 +56,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
 
-    //Populate the list
+    //Populate the Recyclerview list
     @Override
     public void onBindViewHolder(@NonNull final ProductViewHolder holder, int position) {
         RecyclerViewData recyclerViewData = dataList.get(position);
 
-        //holder.tvProductName.setText(recyclerViewDataList.get(position).ProdName);
-        //holder.tvSupplierName.setText(recyclerViewDataList.get(position).SupName);
-
         holder.tvProductName.setText(recyclerViewData.getProdName());
         holder.tvSupplierName.setText(recyclerViewData.getSupName());
-
-        holder.btnEditProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddProductActivity.class);
-                context.startActivity(intent);
-            }
-        });
     }
 
 

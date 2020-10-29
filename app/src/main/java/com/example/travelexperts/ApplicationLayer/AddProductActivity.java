@@ -121,6 +121,7 @@ public class AddProductActivity extends AppCompatActivity{
 
     public void Restart()
     {
+        //Show dialog
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Data Added Successfully!!");
         dialog.setMessage("Do you want to add another data?");
@@ -232,6 +233,7 @@ public class AddProductActivity extends AppCompatActivity{
         selectSupplier.setAdapter(supplierArrayAdapter);
     }
 
+    //get Product Id from spinner
     private int getPId(){
         selectProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -257,6 +259,7 @@ public class AddProductActivity extends AppCompatActivity{
         return pId;
     }
 
+    //get Spinner Id from spinner
     private int getSId(){
         selectSupplier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -277,7 +280,6 @@ public class AddProductActivity extends AppCompatActivity{
     //fetch Suppliers data from server
     private void insertData(final int prodId, final int supId) {
         getSId();
-        //dbHelper = new DBHelper(getApplicationContext());
 
         Log.d("pos", prodId +" " + supId);
 

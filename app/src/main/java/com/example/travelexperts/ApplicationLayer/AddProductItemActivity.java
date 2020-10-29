@@ -54,6 +54,7 @@ public class AddProductItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product_item);
         requestQueue = Volley.newRequestQueue(this);
+
         //Set background color form Settings
         clAddProductItem= findViewById(R.id.clAddProductItem);
         btnAddProductItemSave=findViewById(R.id.btnAddProductItemSave);
@@ -80,7 +81,6 @@ public class AddProductItemActivity extends AppCompatActivity {
 
 
         }
-
 
         btnAddProductItemCancel.setOnClickListener(new View.OnClickListener() {
             @Override
