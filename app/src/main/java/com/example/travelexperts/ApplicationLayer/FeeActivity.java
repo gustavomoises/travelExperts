@@ -187,7 +187,21 @@ public class FeeActivity extends AppCompatActivity {
                         for (int i=0; i<jsonArray.length(); i++)
                         {
                             JSONObject agt = jsonArray.getJSONObject(i);
-                            Fee fee = new Fee(agt.getString("FeeId"), agt.getString("FeeName"),agt.getDouble("FeeAmt"),agt.getString("FeeDesc"));
+
+                            String nulo="null";
+                            String feeName="";
+                            if (agt.getString("FeeName").equals(nulo))
+                                feeName="";
+                            else
+                                feeName=agt.getString("FeeName");
+
+                            String feeDesc="";
+                            if (agt.getString("FeeDesc").equals(nulo))
+                                feeDesc="";
+                            else
+                                feeDesc=agt.getString("FeeDesc");
+
+                            Fee fee = new Fee(agt.getString("FeeId"), feeName,agt.getDouble("FeeAmt"),feeDesc);
                             adapter.add(fee);
                         }
                     } catch (JSONException e) {
